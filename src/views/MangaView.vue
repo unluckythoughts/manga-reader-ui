@@ -8,8 +8,17 @@
       p(v-for="line in this.synopsis()")
         span(v-html="line")
     .actions
-      input.favorite(type="checkbox", @click="this.toggleFavorite()")
-      button.update(@click="this.getUpdates()") check for updates
+      span.favorite
+        fa-icon#favorited(
+          icon="fa-heart",
+          @click="this.toggleFavorite()",
+          size="3x",
+          :class="{ favorited: this.inLibrary }"
+        )
+      span.updates
+        button.update(v-if="this.inLibrary", @click="this.getUpdates()")
+          span check for updates
+          fa-icon(icon="fa-redo", pull="left")
 .chapters
   h2 Chapters
   .chapter(v-for="(chapter, i) in this.manga().chapters")
@@ -20,7 +29,7 @@
 import ChapterComponent from "@/components/ChapterComponent.vue" // @ is an alias to /src
 import { Routes } from "@/router"
 import { ActionTypes } from "@/store/actions"
-import { Chapter, Favorite, State } from "@/store/types"
+import { Chapter, State } from "@/store/types"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 
@@ -31,7 +40,7 @@ import { Store, useStore } from "vuex"
 })
 export default class MangaView extends Vue {
   store!: Store<State>
-  favorite !: Favorite
+  inLibrary = false
 
   data() {
     return {
@@ -51,6 +60,12 @@ export default class MangaView extends Vue {
         const newSrc = this.store.state.apiBaseUrl + "/_proxy/" + imgSrc?.replace(/^\/\//, "http://")
         img.setAttribute("src", newSrc)
       }
+    }
+  }
+
+  mounted() {
+    if (this.$route.name === Routes.FavoriteView) {
+      this.inLibrary = true
     }
   }
 
@@ -79,22 +94,54 @@ export default class MangaView extends Vue {
 
 <style lang="sass" scoped>
 .info
+  padding: 20px
   display: grid
-  grid-template-columns: repeat( auto-fit, minmax(200px, 1fr) )
-  grid-auto-flow: columns
+  grid-template-columns: min-content 1fr
+  grid-template-areas: "img details" "img details"
+  user-select: none
+  gap: 10px
   .icon
-    user-select: none
+    grid-area: img
+    width: 300px
     img
       user-select: none
       border-radius: 10px
-      width: 300px
       max-width: 100%
       height: 100%
       object-fit: cover
   .details
+    grid-area: details
+    display: grid
+    grid-auto-flow: row
+    grid-template-rows: 80px 1fr 100px
+
+    .synopsis
+      text-align: left
+
     .actions
       display: grid
-      grid-auto-flow: column
+      grid-template-columns: 1fr 1fr
+
+      #favorited.favorited
+        color: aqua
+        path
+          stroke: red !important
+          stroke-width: 20px !important
+
+      button
+        background-color: #222
+        color: #ffffff
+        box-shadow: none
+        outline: none
+        border: none
+        font-size: 18px
+        height: 50px
+        padding: 0 10px
+
+        &:hover
+          font-size: 1.2rem
+          background-color: #444
+          box-shadow: 5px 10px 20px 20px rgba(0, 0, 0, .95)
 
 .chapters
   display: grid
