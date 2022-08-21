@@ -1,20 +1,23 @@
 <template lang="pug">
-.manga-list
+.updates-list
   .loading(v-if="this.store.state.pageLoading")
     h1 loading
-  MangaComponent(v-for="manga in this.mangaList", :manga="manga")
+  UpdateComponent(
+    v-for="update in this.updateList",
+    :dayUpdate="this.castToDayUpdate(update)"
+  )
 </template>
 
 <script lang="ts">
-import MangaComponent from "@/components/MangaComponent.vue" // @ is an alias to /src
+import UpdateComponent from "@/components/UpdateComponent.vue" // @ is an alias to /src
 import { GetterTypes } from "@/store/getters"
-import { State } from "@/store/types"
+import { DayUpdate, Favorite, State } from "@/store/types"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 
 @Options({
   components: {
-    MangaComponent
+    UpdateComponent
   }
 })
 export default class MangaListView extends Vue {
@@ -26,8 +29,12 @@ export default class MangaListView extends Vue {
     }
   }
 
-  get mangaList() {
-    return this.store.getters[GetterTypes.GET_SOURCE_MANGA_LIST]
+  castToDayUpdate(obj: any): DayUpdate {
+    return new DayUpdate(obj)
+  }
+
+  get updateList(): Array<{ date: string, updates: Array<{ index: number, favorite: Favorite }> }> {
+    return this.store.getters[GetterTypes.GET_UPDATES]
   }
 }
 </script>
@@ -36,7 +43,5 @@ export default class MangaListView extends Vue {
 .manga-list
   display: grid
   grid-template-columns: repeat( auto-fit, minmax(200px, 1fr) )
-  align-content: space-around
-  justify-content: space-evenly
   gap: 10px
 </style>

@@ -1,6 +1,6 @@
 <template lang="pug">
 .source(@click="this.goto()", :style="{ 'background-image': this.imageUrl() }")
-  p.title {{ this.source.domain }}
+  p {{ this.source.name }}
 </template>
 
 <script lang="ts">
@@ -46,7 +46,14 @@ export default class SourceComponent extends Vue {
   width: 200px
   height: 200px
   cursor: pointer
-  background-size: 100% 100%
+  background-size: 100%
   background-repeat: no-repeat
-  object-fit: contain
+  background-position: center center
+  box-shadow: inset 0 -10px 05px 0 rgba(0,0,0,.1), inset 0 -20px 10px 0 rgba(0,0,0,.2), inset 0 -30px 15px 0 rgba(0,0,0,.3), inset 0 -40px 20px 0 rgba(0,0,0,.4), inset 0 -50px 25px 0 rgba(0,0,0,.5)
+
+  p
+    display: flex
+    height: 90%
+    align-items: flex-end
+    justify-content: space-evenly
 </style>

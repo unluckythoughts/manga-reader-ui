@@ -8,11 +8,11 @@
       p(v-for="line in this.synopsis()")
         span(v-html="line")
     .actions
-      input.favorite(type="checkbox")
+      input.favorite(type="checkbox", @click="this.toggleFavorite()")
       button.update(@click="this.getUpdates()") check for updates
 .chapters
   h2 Chapters
-  .chapter(v-for="(chapter, i) in this.sortedChapters()")
+  .chapter(v-for="(chapter, i) in this.manga().chapters")
     ChapterComponent(:index="i", :chapter="this.castToChapter(chapter)")
 </template>
 
@@ -21,7 +21,6 @@ import ChapterComponent from "@/components/ChapterComponent.vue" // @ is an alia
 import { Routes } from "@/router"
 import { ActionTypes } from "@/store/actions"
 import { Chapter, Favorite, State } from "@/store/types"
-import * as _ from "lodash"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 
@@ -44,11 +43,6 @@ export default class MangaView extends Vue {
     return this.store.state.currentManga
   }
 
-  sortedChapters() {
-    return _.orderBy(this.manga().chapters,
-      (e: Chapter) => Number(e.number.replace(/^([0-9]+).*/g, "$1")), "desc")
-  }
-
   setAltImg(e: Event) {
     if (e.type === "error") {
       const img = (e.target as HTMLImageElement)
@@ -66,6 +60,10 @@ export default class MangaView extends Vue {
     } else {
       this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_INFO, this.$route.query.mangaUrl)
     }
+  }
+
+  toggleFavorite() {
+    this.store.dispatch(ActionTypes.UPDATE_LIBRARY, this.store.state.currentManga.url)
   }
 
   castToChapter(obj?: any): Chapter {

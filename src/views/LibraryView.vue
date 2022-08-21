@@ -43,5 +43,7 @@ export default class LibraryView extends Vue {
 .manga-list
   display: grid
   grid-template-columns: repeat( auto-fit, minmax(200px, 1fr) )
+  align-content: space-around
+  justify-content: space-evenly
   gap: 10px
 </style>

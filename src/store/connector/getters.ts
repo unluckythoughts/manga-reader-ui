@@ -18,10 +18,16 @@ export const getters = {
   },
   [GetterTypes.GET_SOURCE_LIST](state: ConnectorState): Array<Source> {
     const sources = new Array<Source>()
-    state.connectors.forEach((el) => sources.push(el.src))
+    if (state.connectors?.size > 0) {
+      state.connectors.forEach((el) => sources.push(el.src))
+    }
     return sources
   },
   [GetterTypes.GET_SOURCE_MANGA_LIST](state: ConnectorState): Manga[] {
-    return state.connectors.get(state.currentDomain)?.mangaList || new Array<Manga>()
+    if (state.connectors?.size > 0) {
+      return state.connectors.get(state.currentDomain)?.mangaList || new Array<Manga>()
+    }
+
+    return new Array<Manga>()
   }
 }

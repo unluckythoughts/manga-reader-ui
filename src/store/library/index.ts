@@ -11,11 +11,10 @@ const state: LibraryState = {
   favorites: new Map<number, Favorite>()
 }
 
-
 export default {
   strict: true,
   state,
   getters,
   mutations,
-  actions,
+  actions
 }

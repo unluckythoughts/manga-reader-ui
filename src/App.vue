@@ -53,9 +53,10 @@ html,body
   grid-template-columns: 50px 1fr
   column-gap: 0px
 
-.app.reader
-  grid-template-columns: 1fr
+  &.reader
+    grid-template-columns: 1fr
 
   .content
-    overflow: auto
+    overflow-x: hidden
+    overflow-y: auto
 </style>

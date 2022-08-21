@@ -3,6 +3,7 @@ import LibraryView from "@/views/LibraryView.vue"
 
 export enum Routes {
   LibraryView = "LibraryView",
+  UpdatesView = "UpdatesView",
   FavoriteView = "FavoriteView",
   SourceListView = "SourceListView",
   SourceMangaListView = "SourceMangaListView",
@@ -19,6 +20,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/library",
     name: Routes.LibraryView,
     component: LibraryView
+  },
+  {
+    path: "/library/updates/all",
+    name: Routes.UpdatesView,
+    component: () => import(/* webpackChunkName: "mangaview" */ "../views/UpdatesView.vue")
   },
   {
     path: "/library/:id",

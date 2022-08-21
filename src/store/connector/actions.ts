@@ -1,9 +1,10 @@
 import axios from "axios"
+import _ from "lodash"
 import { ActionContext } from "vuex"
 import { ConnectorState } from "."
 import { ActionTypes } from "../actions"
 import { MutationTypes } from "../mutations"
-import { Manga, Source, State } from "../types"
+import { Chapter, Manga, Source, State } from "../types"
 
 export const actions = {
   async [ActionTypes.GET_SOURCE_MANGA_LIST]({ commit, rootState }: ActionContext<ConnectorState, State>, payload: string) {
@@ -26,6 +27,8 @@ export const actions = {
     const url = rootState.apiBaseUrl + "/source/manga"
     const resp = await axios.post(url, { mangaUrl: payload })
     const manga = new Manga(resp.data.data)
+    manga.chapters = _.orderBy(manga.chapters,
+      (e: Chapter) => Number(e.number.replace(/^([0-9]+).*/g, "$1")), "desc")
 
     commit(MutationTypes.SET_SOURCE_MANGA_INFO, manga)
     commit(MutationTypes.SET_CURRENT_MANGA, manga)

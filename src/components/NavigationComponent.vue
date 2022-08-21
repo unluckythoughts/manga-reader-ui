@@ -5,6 +5,8 @@
       router-link(to="/library")
         span(@click="this.refreshLibrary()") Home
     li
+      router-link(to="/library/updates/all") Updates
+    li
       router-link(to="/sources") Source
 </template>
 

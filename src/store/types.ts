@@ -1,4 +1,3 @@
-
 export class Chapter {
   id: number
   url: string
@@ -62,6 +61,16 @@ export class Favorite {
     this.manga = new Manga(obj?.manga)
     this.progress = obj?.progress || ""
     this.categories = obj?.categories || []
+  }
+}
+
+export class DayUpdate {
+  date: string
+  updates: Array<{ index: number, favorite: Favorite }>
+
+  constructor(obj?: any) {
+    this.date = obj?.date || ""
+    this.updates = obj?.updates || Array<{ index: number, favorite: Favorite }>()
   }
 }
 

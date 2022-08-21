@@ -5,6 +5,7 @@ import { getters } from "./getters"
 import library from "./library"
 import { mutations } from "./mutations"
 import { Manga, State } from "./types"
+import createPersistedState from "vuex-persistedstate"
 
 const state: State = {
   inReadingMode: false,
@@ -19,7 +20,7 @@ export const store = createStore({
   getters,
   mutations,
   actions,
-  plugins: [createLogger()],
+  plugins: [createLogger(), createPersistedState()],
   modules: {
     library,
     connector

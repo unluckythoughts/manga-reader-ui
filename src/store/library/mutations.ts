@@ -13,7 +13,7 @@ export const mutations = {
     state.favorites = new Map<number, Favorite>()
   },
   [MutationTypes.UPDATE_FAVORITE_CHAPTERS](state: LibraryState, payload: Favorite) {
-    const favorite = state.favorites.get(payload.id) || new Favorite()
+    const favorite = state.favorites?.get(payload.id) || new Favorite()
     favorite.manga.chapters = payload.manga.chapters
     state.favorites.set(payload.id, favorite)
   }
