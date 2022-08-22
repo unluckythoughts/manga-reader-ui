@@ -5,15 +5,15 @@ import { mutations } from "./mutations"
 
 export type ConnectorState = {
   currentDomain: string
-  connectors: Map<string, { src: Source, mangaList: Manga[] }>
+  connectors: Array<Source>
 }
 
 const state: ConnectorState = {
   currentDomain: "",
-  connectors: new Map<string, { src: Source, mangaList: Manga[] }>()
+  connectors: new Array<Source>()
 }
 
-export default {
+export const connector = {
   strict: true,
   state,
   getters,

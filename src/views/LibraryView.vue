@@ -2,14 +2,17 @@
 .manga-list
   .loading(v-if="this.store.state.pageLoading")
     h1 loading
-  FavoriteComponent(v-for="el in this.favorites", :favorite="el[1]")
+  FavoriteComponent(
+    v-for="el in this.favorites",
+    :favorite="this.castToFavorite(el)"
+  )
 </template>
 
 <script lang="ts">
 import FavoriteComponent from "@/components/FavoriteComponent.vue" // @ is an alias to /src
 import { ActionTypes } from "@/store/actions"
 import { GetterTypes } from "@/store/getters"
-import { State } from "@/store/types"
+import { Favorite, State } from "@/store/types"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 
@@ -33,8 +36,12 @@ export default class LibraryView extends Vue {
     }
   }
 
-  get favorites() {
-    return Array.from(this.store.getters[GetterTypes.GET_FAVORITES])
+  castToFavorite(obj: any) {
+    return new Favorite(obj)
+  }
+
+  get favorites(): Array<Favorite> {
+    return this.store.getters[GetterTypes.GET_FAVORITES]
   }
 }
 </script>

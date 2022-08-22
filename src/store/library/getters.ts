@@ -1,4 +1,5 @@
 import _ from "lodash"
+import moment from "moment"
 import { LibraryState } from "."
 import { GetterTypes } from "../getters"
 import { DayUpdate, Favorite } from "../types"
@@ -6,18 +7,26 @@ import { DayUpdate, Favorite } from "../types"
 export const getters = {
   [GetterTypes.GET_FAVORITE](state: LibraryState): (id: number) => Favorite {
     return (id: number): Favorite => {
-      return state.favorites.get(id) || new Favorite()
+      const i = _.findIndex(state.favorites, el => el.id === id)
+      if (i >= 0) {
+        return state.favorites[i]
+      }
+
+      return new Favorite()
     }
   },
-  [GetterTypes.GET_FAVORITES](state: LibraryState): Map<number, Favorite> {
-    return state.favorites || new Map<number, Favorite>()
+  [GetterTypes.GET_FAVORITES](state: LibraryState): Array<Favorite> {
+    return state.favorites || new Array<Favorite>()
   },
   [GetterTypes.GET_UPDATES](state: LibraryState): Array<DayUpdate> {
     const updateList = new Map<string, Array<{ index: number, favorite: Favorite }>>()
-
-    if (state.favorites?.size > 0) {
+    if (state.favorites?.length > 0) {
       state.favorites.forEach((v) => {
         v.manga.chapters.forEach((c, i) => {
+          if (moment(c.uploadDate, "YYYY-MM-DD").diff(moment(), "month") < 0) {
+            return
+          }
+
           const val = { index: i, favorite: v }
           let vals = new Array<{ index: number, favorite: Favorite }>()
           if (updateList.get(c.uploadDate) !== undefined) {

@@ -33,7 +33,7 @@ export default class MangaListView extends Vue {
     return new DayUpdate(obj)
   }
 
-  get updateList(): Array<{ date: string, updates: Array<{ index: number, favorite: Favorite }> }> {
+  get updateList(): Array<DayUpdate> {
     return this.store.getters[GetterTypes.GET_UPDATES]
   }
 }

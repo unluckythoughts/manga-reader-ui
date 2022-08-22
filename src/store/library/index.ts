@@ -4,14 +4,14 @@ import { getters } from "./getters"
 import { mutations } from "./mutations"
 
 export type LibraryState = {
-  favorites: Map<number, Favorite>
+  favorites: Array<Favorite>
 }
 
 const state: LibraryState = {
-  favorites: new Map<number, Favorite>()
+  favorites: new Array<Favorite>()
 }
 
-export default {
+export const library = {
   strict: true,
   state,
   getters,

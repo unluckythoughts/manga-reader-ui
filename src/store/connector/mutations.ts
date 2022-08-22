@@ -1,44 +1,42 @@
+import _ from "lodash"
 import { ConnectorState } from "."
 import { MutationTypes } from "../mutations"
 import { Manga, Source } from "../types"
 
 export const mutations = {
   [MutationTypes.SET_SOURCE_LIST](state: ConnectorState, payload: Array<Source>) {
-    for (const i in payload) {
-      state.connectors.set(payload[i].domain, { src: payload[i], mangaList: new Array<Manga>() })
-    }
+    state.connectors = payload
   },
   [MutationTypes.SET_SOURCE_DOMAIN](state: ConnectorState, payload: string) {
     state.currentDomain = payload
   },
   [MutationTypes.CLEAR_SOURCE_LIST](state: ConnectorState) {
-    state.connectors = new Map<string, { src: Source, mangaList: Manga[] }>()
+    state.connectors = new Array<Source>()
   },
   [MutationTypes.SET_SOURCE_MANGA_LIST](state: ConnectorState, payload: Array<Manga>) {
-    const data = { src: new Source(), mangaList: payload }
-    if (state.connectors.get(state.currentDomain) !== undefined) {
-      data.src = state.connectors.get(state.currentDomain)?.src || data.src
+    const i = _.findIndex(state.connectors, el => el.domain === state.currentDomain)
+    if (i >= 0) {
+      state.connectors[i].mangaList = payload
+    } else {
+      const src = new Source()
+      src.mangaList = payload
+      src.domain = state.currentDomain
+      state.connectors.push(src)
     }
-    state.connectors.set(state.currentDomain, data)
   },
-
   [MutationTypes.CLEAR_SOURCE_MANGA_LIST](state: ConnectorState, payload: string) {
-    if (state.connectors.get(payload) !== undefined) {
-      const data = { src: new Source(), mangaList: new Array<Manga>() }
-      data.src = state.connectors.get(payload)?.src || data.src
-      state.connectors.set(payload, data)
+    const i = _.findIndex(state.connectors, el => el.domain === payload)
+    if (i >= 0) {
+      state.connectors.splice(i, 1)
     }
   },
   [MutationTypes.SET_SOURCE_MANGA_INFO](state: ConnectorState, payload: Manga) {
-    if (state.connectors.get(state.currentDomain) !== undefined) {
-      const connectorData = state.connectors.get(state.currentDomain) || { src: new Source(), mangaList: new Array<Manga>() }
-      connectorData.mangaList.forEach((m, i) => {
-        if (m.url === payload.url) {
-          connectorData.mangaList[i] = payload
-        }
-      })
-
-      state.connectors.set(state.currentDomain, connectorData)
+    const i = _.findIndex(state.connectors, el => el.domain === state.currentDomain)
+    if (i >= 0) {
+      const j = _.findIndex(state.connectors[i].mangaList, el => el.url === payload.url)
+      if (j >= 0) {
+        state.connectors[i].mangaList[j] = payload
+      }
     }
   }
 }
