@@ -32,6 +32,8 @@ export default class AppView extends Vue {
 </script>
 
 <style lang="sass">
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500;1,600&display=swap')
+
 html,body
   height: 100%
   margin: 0px
@@ -41,7 +43,7 @@ html,body
 
 #app
   height: 100%
-  font-family: Avenir, Helvetica, Arial, sans-serif
+  font-family: Montserrat, Aboreto, Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   text-align: center
@@ -57,6 +59,7 @@ html,body
     grid-template-columns: 1fr
 
   .content
+    padding: 10px
     overflow-x: hidden
     overflow-y: auto
 </style>
