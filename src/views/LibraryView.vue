@@ -1,4 +1,7 @@
 <template lang="pug">
+#refresh(v-if="!this.store.state.pageLoading", @click="this.updateLibrary()")
+  fa-icon.icon(icon="fa-redo")
+  span.title refresh
 .manga-list
   .loading(v-if="this.store.state.pageLoading")
     h1 loading
@@ -30,9 +33,14 @@ export default class LibraryView extends Vue {
     }
   }
 
+  updateLibrary() {
+    this.store.dispatch(ActionTypes.GET_LIBRARY)
+    this.store.dispatch(ActionTypes.GET_SOURCE_LIST)
+  }
+
   mounted() {
     if (this.store.getters[GetterTypes.GET_FAVORITES].length <= 0) {
-      this.store.dispatch(ActionTypes.GET_LIBRARY)
+      this.updateLibrary()
     }
   }
 

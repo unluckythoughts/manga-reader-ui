@@ -1,7 +1,7 @@
 <template lang="pug">
 .manga(@click="this.goto()")
-  .icon
-    img.icon(
+  .manga-icon
+    img.manga(
       :src="this.favorite.manga.imageUrl",
       @error="this.setAltImg",
       loading="lazy"
@@ -15,7 +15,7 @@ import { Routes } from "@/router"
 import { GetterTypes } from "@/store/getters"
 import { MutationTypes } from "@/store/mutations"
 import { Favorite, State } from "@/store/types"
-import { getSourceIcon } from "@/utils/utils"
+import { getSourceIcon, setAltImg } from "@/utils/utils"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 
@@ -35,14 +35,7 @@ export default class FavoriteComponent extends Vue {
   }
 
   setAltImg(e: Event) {
-    if (e.type === "error") {
-      const img = (e.target as HTMLImageElement)
-      const imgSrc = img.getAttribute("src")
-      if (imgSrc !== "" && !imgSrc?.startsWith(this.store.state.apiBaseUrl)) {
-        const newSrc = this.store.state.apiBaseUrl + "/_proxy/" + imgSrc?.replace(/^\/\//, "http://")
-        img.setAttribute("src", newSrc)
-      }
-    }
+    setAltImg(e, this.store.state.apiBaseUrl)
   }
 
   sourceIcon() {
@@ -77,30 +70,6 @@ export default class FavoriteComponent extends Vue {
     height: 100%
     z-index: 1
     box-shadow: inset 0 -10px 05px 0 rgba(0,0,0,.1), inset 0 -20px 10px 0 rgba(0,0,0,.2), inset 0 -30px 15px 0 rgba(0,0,0,.3), inset 0 -40px 20px 0 rgba(0,0,0,.4), inset 0 -50px 25px 0 rgba(0,0,0,.5)
-
-  .icon
-    display: grid
-    width: 100%
-    height: 100%
-    grid-template-columns: 1fr
-    grid-template-rows: 1fr
-    border-radius: 5px
-    overflow: hidden
-    object-fit: cover
-    grid-row-start: 1
-    grid-column-start: 1
-    img.icon
-      grid-column-start: 1
-      grid-row-start: 1
-      user-select: none
-      border-radius: 10px
-      max-width: 100%
-      height: 100%
-      object-fit: cover
-    img.source
-      grid-column-start: 1
-      grid-row-start: 1
-      height: 40px
 
   p.title
     font-family: Aboreto

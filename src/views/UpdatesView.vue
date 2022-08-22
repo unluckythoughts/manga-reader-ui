@@ -11,7 +11,7 @@
 <script lang="ts">
 import UpdateComponent from "@/components/UpdateComponent.vue" // @ is an alias to /src
 import { GetterTypes } from "@/store/getters"
-import { DayUpdate, Favorite, State } from "@/store/types"
+import { DayUpdate, State } from "@/store/types"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 

@@ -1,4 +1,7 @@
 <template lang="pug">
+#refresh(v-if="!this.store.state.pageLoading", @click="this.getSources()")
+  fa-icon.icon(icon="fa-redo")
+  span.title refresh
 .source-list
   SourceComponent(v-for="source in this.sources", :source="source")
 </template>
@@ -25,8 +28,14 @@ export default class SourceListView extends Vue {
     }
   }
 
-  mounted() {
+  getSources() {
     this.store.dispatch(ActionTypes.GET_SOURCE_LIST)
+  }
+
+  mounted() {
+    if (this.store.getters[GetterTypes.GET_SOURCE_MANGA_LIST].length <= 0) {
+      this.getSources()
+    }
   }
 
   get sources() {

@@ -3,8 +3,7 @@
   ul
     li
       router-link(to="/library")
-        span(@click="this.refreshLibrary()")
-          fa-icon(icon="fa-home", size="xl")
+        fa-icon(icon="fa-home", size="xl")
     li
       router-link(to="/library/updates/all")
         fa-icon(icon="fa-redo", size="xl")
@@ -15,7 +14,6 @@
 </template>
 
 <script lang="ts">
-import { ActionTypes } from "@/store/actions"
 import { State } from "@/store/types"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
@@ -33,10 +31,6 @@ export default class ImageComponent extends Vue {
     return {
       store: useStore()
     }
-  }
-
-  refreshLibrary() {
-    this.store.dispatch(ActionTypes.GET_LIBRARY)
   }
 }
 </script>

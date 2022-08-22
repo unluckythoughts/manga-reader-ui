@@ -1,4 +1,7 @@
 <template lang="pug">
+#refresh(v-if="!this.store.state.pageLoading", @click="this.getUpdates()")
+  fa-icon.icon(icon="fa-redo")
+  span.title update
 .loading(v-if="this.store.state.pageLoading")
   h1 loading
 .info
@@ -20,10 +23,6 @@
           size="3x",
           :class="{ favorited: this.inLibrary }"
         )
-      span.updates
-        button.update(v-if="this.inLibrary", @click="this.getUpdates()")
-          span check for updates
-          fa-icon(icon="fa-redo", pull="left")
 .chapters
 h2 Chapters
 .chapter(v-for="(chapter, i) in this.manga().chapters")
@@ -36,7 +35,7 @@ import { Routes } from "@/router"
 import { ActionTypes } from "@/store/actions"
 import { GetterTypes } from "@/store/getters"
 import { Chapter, State } from "@/store/types"
-import { getSourceIcon } from "@/utils/utils"
+import { getSourceIcon, setAltImg } from "@/utils/utils"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 
@@ -65,24 +64,21 @@ export default class MangaView extends Vue {
   }
 
   setAltImg(e: Event) {
-    if (e.type === "error") {
-      const img = (e.target as HTMLImageElement)
-      const imgSrc = img.getAttribute("src")
-      if (imgSrc !== "" && !imgSrc?.startsWith(this.store.state.apiBaseUrl)) {
-        const newSrc = this.store.state.apiBaseUrl + "/_proxy/" + imgSrc?.replace(/^\/\//, "http://")
-        img.setAttribute("src", newSrc)
-      }
-    }
+    setAltImg(e, this.store.state.apiBaseUrl)
   }
 
   mounted() {
     if (this.$route.name === Routes.FavoriteView) {
       this.inLibrary = true
+    } else {
+      if (this.manga().chapters.length <= 0) {
+        this.getUpdates()
+      }
     }
   }
 
   getUpdates() {
-    if (this.$route.name === Routes.FavoriteView) {
+    if (this.inLibrary) {
       this.store.dispatch(ActionTypes.UPDATE_FAVORITE_INFO, this.$route.params.id)
     } else {
       this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_INFO, this.$route.query.mangaUrl)
@@ -114,23 +110,7 @@ export default class MangaView extends Vue {
   gap: 10px
   .icon
     grid-area: img
-    display: grid
     width: 300px
-    grid-template-columns: 1fr
-    grid-template-rows: 1fr
-    img.icon
-      grid-column-start: 1
-      grid-row-start: 1
-      user-select: none
-      border-radius: 10px
-      max-width: 100%
-      height: 100%
-      object-fit: cover
-
-    img.source
-      grid-column-start: 1
-      grid-row-start: 1
-      height: 40px
 
   .details
     grid-area: details

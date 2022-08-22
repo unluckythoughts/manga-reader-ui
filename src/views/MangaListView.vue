@@ -1,14 +1,21 @@
 <template lang="pug">
+#refresh(v-if="!this.store.state.pageLoading", @click="this.updateMangaList()")
+  fa-icon.icon(icon="fa-redo")
+  span.title refresh
 .manga-list
   .loading(v-if="this.store.state.pageLoading")
     h1 loading
-  MangaComponent(v-for="manga in this.mangaList", :manga="manga")
+  MangaComponent(
+    v-for="manga in this.mangaList",
+    :manga="this.castToManga(manga)"
+  )
 </template>
 
 <script lang="ts">
 import MangaComponent from "@/components/MangaComponent.vue" // @ is an alias to /src
+import { ActionTypes } from "@/store/actions"
 import { GetterTypes } from "@/store/getters"
-import { State } from "@/store/types"
+import { Manga, State } from "@/store/types"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 
@@ -24,6 +31,14 @@ export default class MangaListView extends Vue {
     return {
       store: useStore()
     }
+  }
+
+  updateMangaList() {
+    this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_LIST)
+  }
+
+  castToManga(obj: any): Manga {
+    return new Manga(obj)
   }
 
   get mangaList() {
