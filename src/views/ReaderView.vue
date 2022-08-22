@@ -35,6 +35,7 @@ export default class ReaderView extends Vue {
   lastScroll!: number
   scrollingUp = false
   chapter !: Chapter
+  currentPage = 0
 
   data() {
     return {
@@ -71,6 +72,25 @@ export default class ReaderView extends Vue {
       this.scrollingUp = false
     }
     this.lastScroll = scroll
+    this.updateProgress()
+  }
+
+  updateProgress() {
+    this.scrollTarget.querySelectorAll(".page img").forEach((el, i) => {
+      const rect = el.getBoundingClientRect()
+      if (rect.top < this.scrollTarget.clientHeight) {
+        if (rect.height + rect.top > 0) {
+          if (i > this.currentPage) {
+            this.currentPage = i
+            this.store.dispatch(ActionTypes.UPDATE_FAVORITE_PROGRESS, {
+              read: false,
+              index: Number(this.$route.params.id || "0"),
+              pageId: this.currentPage
+            })
+          }
+        }
+      }
+    })
   }
 
   goPrevious() {
