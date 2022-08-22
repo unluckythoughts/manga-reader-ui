@@ -5,9 +5,19 @@ import { GetterTypes } from "../getters"
 import { DayUpdate, Favorite } from "../types"
 
 export const getters = {
-  [GetterTypes.GET_FAVORITE](state: LibraryState): (id: number) => Favorite {
-    return (id: number): Favorite => {
-      const i = _.findIndex(state.favorites, el => el.id === id)
+  [GetterTypes.GET_FAVORITE](state: LibraryState): (id: string) => Favorite {
+    return (id: string): Favorite => {
+      const i = _.findIndex(state.favorites, el => el.id === parseInt(id))
+      if (i >= 0) {
+        return state.favorites[i]
+      }
+
+      return new Favorite()
+    }
+  },
+  [GetterTypes.GET_FAVORITE_BY_URL](state: LibraryState): (url: string) => Favorite {
+    return (url: string): Favorite => {
+      const i = _.findIndex(state.favorites, el => el.manga.url === url)
       if (i >= 0) {
         return state.favorites[i]
       }

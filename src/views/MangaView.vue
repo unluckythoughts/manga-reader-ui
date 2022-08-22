@@ -24,9 +24,12 @@
           :class="{ favorited: this.inLibrary }"
         )
 .chapters
-h2 Chapters
-.chapter(v-for="(chapter, i) in this.manga().chapters")
-  ChapterComponent(:index="i", :chapter="this.castToChapter(chapter)")
+  h2 Chapters
+  .chapter(
+    v-for="(chapter, i) in this.manga().chapters",
+    :class="{ completed: this.isRead(chapter) }"
+  )
+    ChapterComponent(:index="i", :chapter="this.castToChapter(chapter)")
 </template>
 
 <script lang="ts">
@@ -34,6 +37,7 @@ import ChapterComponent from "@/components/ChapterComponent.vue" // @ is an alia
 import { Routes } from "@/router"
 import { ActionTypes } from "@/store/actions"
 import { GetterTypes } from "@/store/getters"
+import { MutationTypes } from "@/store/mutations"
 import { Chapter, State } from "@/store/types"
 import { getSourceIcon, setAltImg } from "@/utils/utils"
 import { Options, Vue } from "vue-class-component"
@@ -67,6 +71,16 @@ export default class MangaView extends Vue {
     setAltImg(e, this.store.state.apiBaseUrl)
   }
 
+  isRead(c: Chapter): boolean {
+    if (this.inLibrary) {
+      const favorite = this.store.getters[GetterTypes.GET_FAVORITE](this.$route.params.id)
+      return (favorite.progress[0] > parseInt(c.number)) ||
+        (favorite.progress[0] === parseInt(c.number) && favorite.progress[1] === -1)
+    }
+
+    return false
+  }
+
   mounted() {
     if (this.$route.name === Routes.FavoriteView) {
       this.inLibrary = true
@@ -86,7 +100,19 @@ export default class MangaView extends Vue {
   }
 
   toggleFavorite() {
-    this.store.dispatch(ActionTypes.ADD_FAVORITE, this.store.state.currentManga.url)
+    if (!this.inLibrary) {
+      this.store.dispatch(ActionTypes.ADD_FAVORITE, this.store.state.currentManga.url)
+      setTimeout(() => {
+        const favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.store.state.currentManga.url)
+        if (favorite !== undefined && favorite.id > 0) {
+          this.store.commit(MutationTypes.SET_CURRENT_MANGA, favorite.manga)
+          this.$router.replace({ name: Routes.FavoriteView, params: { id: favorite.id } })
+        }
+      }, 500)
+    } else {
+      this.store.dispatch(ActionTypes.DEL_FAVORITE, this.$route.params.id)
+      this.$router.replace({ name: Routes.SourceMangaView, query: { mangaUrl: this.store.state.currentManga.url } })
+    }
   }
 
   castToChapter(obj?: any): Chapter {
@@ -153,4 +179,7 @@ export default class MangaView extends Vue {
 .chapters
   display: grid
   grid-auto-flow: row
+
+.chapter.completed
+  color: grey
 </style>

@@ -2,6 +2,7 @@ import { State } from "./types"
 
 export enum GetterTypes {
   GET_FAVORITE = "GET_FAVORITE",
+  GET_FAVORITE_BY_URL = "GET_FAVORITE_BY_URL",
   GET_FAVORITES = "GET_FAVORITES",
   GET_UPDATES = "GET_UPDATES",
   GET_SOURCE_MANGA = "GET_SOURCE_MANGA",

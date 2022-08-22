@@ -1,12 +1,12 @@
 <template lang="pug">
-.row(@click="this.gotoReader()", :oncontextmenu="this.options")
-  .info
+.row(:oncontextmenu="this.options")
+  .info(@click="this.gotoReader()")
     .number {{ chapter.number }}
     .title {{ chapter.title }}
     .uploadDate {{ chapter.uploadDate }}
   ContextMenuComponent(ref="menu")
-    span.option Mark as read
-    span.option Mark as unread
+    span.option(@click="this.updateProgress(true)") Mark as read
+    span.option(@click="this.updateProgress(false)") Mark as unread
 </template>
 
 <script lang="ts">
@@ -41,6 +41,11 @@ export default class ChapterComponent extends Vue {
     return {
       store: useStore()
     }
+  }
+
+  updateProgress(read: boolean) {
+    this.store.dispatch(ActionTypes.UPDATE_FAVORITE_PROGRESS, { read: read, index: this.index })
+    this.$refs.menu.close()
   }
 
   options(e: MouseEvent) {
@@ -83,6 +88,7 @@ span.option
   font-size: 16px
   padding: 10px
   text-align: left
+  color: #ffffff
   &:hover
     background-color: #444
 </style>
