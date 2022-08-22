@@ -3,11 +3,15 @@
   ul
     li
       router-link(to="/library")
-        span(@click="this.refreshLibrary()") Home
+        span(@click="this.refreshLibrary()")
+          fa-icon(icon="fa-home", size="xl")
     li
-      router-link(to="/library/updates/all") Updates
+      router-link(to="/library/updates/all")
+        fa-icon(icon="fa-redo", size="xl")
+
     li
-      router-link(to="/sources") Source
+      router-link(to="/sources")
+        fa-icon(icon="fa-globe", size="xl")
 </template>
 
 <script lang="ts">
@@ -51,6 +55,7 @@ export default class ImageComponent extends Vue {
 
     li
       list-style-type: none
+      padding: 10px 0
 
   a
     font-weight: bold

@@ -4,9 +4,9 @@ import router from "./router"
 import { store } from "./store"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
-import { faRedo, faHeart } from "@fortawesome/free-solid-svg-icons"
+import { faRedo, faHeart, faHome, faGlobe, faExternalLink } from "@fortawesome/free-solid-svg-icons"
 
-library.add(faRedo, faHeart)
+library.add(faRedo, faHeart, faHome, faGlobe, faExternalLink)
 
 createApp(App)
   .component("fa-icon", FontAwesomeIcon)

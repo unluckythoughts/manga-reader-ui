@@ -1,13 +1,18 @@
 <template lang="pug">
+.loading(v-if="this.store.state.pageLoading")
+  h1 loading
 .info
   .icon
-    img(@error="this.setAltImg", :src="this.manga().imageUrl")
+    img.icon(@error="this.setAltImg", :src="this.manga().imageUrl")
+    img.source(:src="this.sourceIcon()")
   .details
-    h1.title {{ this.manga().title }}
+    h1.title(tabindex="0") {{ this.manga().title }}
     .synopsis
       p(v-for="line in this.synopsis()")
         span(v-html="line")
     .actions
+      span.web
+        fa-icon.web(icon="fa-external-link", size="3x")
       span.favorite
         fa-icon#favorited(
           icon="fa-heart",
@@ -20,16 +25,18 @@
           span check for updates
           fa-icon(icon="fa-redo", pull="left")
 .chapters
-  h2 Chapters
-  .chapter(v-for="(chapter, i) in this.manga().chapters")
-    ChapterComponent(:index="i", :chapter="this.castToChapter(chapter)")
+h2 Chapters
+.chapter(v-for="(chapter, i) in this.manga().chapters")
+  ChapterComponent(:index="i", :chapter="this.castToChapter(chapter)")
 </template>
 
 <script lang="ts">
 import ChapterComponent from "@/components/ChapterComponent.vue" // @ is an alias to /src
 import { Routes } from "@/router"
 import { ActionTypes } from "@/store/actions"
+import { GetterTypes } from "@/store/getters"
 import { Chapter, State } from "@/store/types"
+import { getSourceIcon } from "@/utils/utils"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 
@@ -50,6 +57,11 @@ export default class MangaView extends Vue {
 
   manga() {
     return this.store.state.currentManga
+  }
+
+  sourceIcon() {
+    const sources = this.store.getters[GetterTypes.GET_SOURCE_LIST]
+    return getSourceIcon(this.manga().url, sources)
   }
 
   setAltImg(e: Event) {
@@ -102,32 +114,46 @@ export default class MangaView extends Vue {
   gap: 10px
   .icon
     grid-area: img
+    display: grid
     width: 300px
-    img
+    grid-template-columns: 1fr
+    grid-template-rows: 1fr
+    img.icon
+      grid-column-start: 1
+      grid-row-start: 1
       user-select: none
       border-radius: 10px
       max-width: 100%
       height: 100%
       object-fit: cover
+
+    img.source
+      grid-column-start: 1
+      grid-row-start: 1
+      height: 40px
+
   .details
     grid-area: details
     display: grid
     grid-auto-flow: row
     grid-template-rows: 80px 1fr 100px
 
+    .title
+      font-family: Aboreto
+
     .synopsis
       text-align: left
 
     .actions
       display: grid
-      grid-template-columns: 1fr 1fr
+      grid-template-columns: 1fr 1fr 3fr
+
+      .web svg
+        cursor: pointer
 
       #favorited.favorited
         color: aqua
-        path
-          stroke: red !important
-          stroke-width: 20px !important
-
+        cursor: pointer
       button
         background-color: #222
         color: #ffffff
@@ -137,6 +163,7 @@ export default class MangaView extends Vue {
         font-size: 18px
         height: 50px
         padding: 0 10px
+        cursor: pointer
 
         &:hover
           font-size: 1.2rem

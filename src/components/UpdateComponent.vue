@@ -95,6 +95,7 @@ h2.date
       text-align: left
 
     .title
+      font-family: Aboreto
       grid-area: title
       font-weight: 600
       margin: auto

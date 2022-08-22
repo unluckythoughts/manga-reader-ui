@@ -1,17 +1,21 @@
 <template lang="pug">
 .manga(@click="this.goto()")
-  img(
-    :src="this.favorite.manga.imageUrl",
-    @error="this.setAltImg",
-    loading="lazy"
-  )
+  .icon
+    img.icon(
+      :src="this.favorite.manga.imageUrl",
+      @error="this.setAltImg",
+      loading="lazy"
+    )
+    img.source(:src="this.sourceIcon()", loading="lazy")
   p.title {{ this.favorite.manga.title }}
 </template>
 
 <script lang="ts">
 import { Routes } from "@/router"
+import { GetterTypes } from "@/store/getters"
 import { MutationTypes } from "@/store/mutations"
 import { Favorite, State } from "@/store/types"
+import { getSourceIcon } from "@/utils/utils"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 
@@ -39,6 +43,11 @@ export default class FavoriteComponent extends Vue {
         img.setAttribute("src", newSrc)
       }
     }
+  }
+
+  sourceIcon() {
+    const sources = this.store.getters[GetterTypes.GET_SOURCE_LIST]
+    return getSourceIcon(this.favorite.manga.url, sources)
   }
 
   goto() {
@@ -69,17 +78,32 @@ export default class FavoriteComponent extends Vue {
     z-index: 1
     box-shadow: inset 0 -10px 05px 0 rgba(0,0,0,.1), inset 0 -20px 10px 0 rgba(0,0,0,.2), inset 0 -30px 15px 0 rgba(0,0,0,.3), inset 0 -40px 20px 0 rgba(0,0,0,.4), inset 0 -50px 25px 0 rgba(0,0,0,.5)
 
-  img
+  .icon
+    display: grid
     width: 100%
     height: 100%
+    grid-template-columns: 1fr
+    grid-template-rows: 1fr
     border-radius: 5px
     overflow: hidden
-    display: block
     object-fit: cover
     grid-row-start: 1
     grid-column-start: 1
+    img.icon
+      grid-column-start: 1
+      grid-row-start: 1
+      user-select: none
+      border-radius: 10px
+      max-width: 100%
+      height: 100%
+      object-fit: cover
+    img.source
+      grid-column-start: 1
+      grid-row-start: 1
+      height: 40px
 
   p.title
+    font-family: Aboreto
     grid-column-start: 1
     grid-row-start: 1
     display: flex

@@ -73,6 +73,7 @@ export default class MangaComponent extends Vue {
     grid-column-start: 1
 
   p.title
+    font-family: Aboreto
     grid-column-start: 1
     grid-row-start: 1
     display: flex

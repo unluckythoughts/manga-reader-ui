@@ -1,11 +1,17 @@
 <template lang="pug">
-.menu(:class="{ float: this.scrollingUp }")
+.menu(:class="{ float: this.scrollingUp }", tabindex="0")
   header(:class="{ float: this.scrollingUp }")
     button(@click="this.goPrevious()") Previous
     button(@click="this.$router.go(-1)") Close
     button(@click="this.goNext()") Next
 .pages
   PageComponent(v-for="url in this.imageUrls", :image-url="url")
+
+.bottom-menu(:class="{ float: this.scrollingUp }")
+  header(:class="{ float: this.scrollingUp }")
+    button(@click="this.goPrevious()") Previous
+    button(@click="this.$router.go(-1)") Close
+    button(@click="this.goNext()") Next
 </template>
 
 <script lang="ts">
@@ -53,7 +59,8 @@ export default class ReaderView extends Vue {
     return this.store.getters[GetterTypes.GET_PAGES](Number(this.$route.params.id || "0"))
   }
 
-  scrolled() {
+  scrolled(e: Event) {
+    e.stopImmediatePropagation()
     const scroll = this.scrollTarget.scrollTop
     if (this.lastScroll < scroll) {
       this.scrollingUp = false
@@ -90,7 +97,7 @@ export default class ReaderView extends Vue {
   grid-auto-flow: row
   gap: 0px
 
-.menu
+.menu,.bottom-menu
   padding-top: 0px
   &.float
     padding-top: 50px
@@ -100,15 +107,30 @@ export default class ReaderView extends Vue {
     display: grid
     grid-auto-flow: column
     grid-template-columns: repeat(3, 1fr)
-    &.float
-      position: absolute
-      top: 1px
-      left: 1px
-      width: 98%
 
   button
     font-size: 1.5em
     border-border-radius: 0px
+    background-color: #222
+    color: #ffffff
+    box-shadow: none
+    outline: none
+    border: none
+
     &:hover
-      background-color: cyan
+      font-size: 1.7rem
+      background-color: #444
+      box-shadow: 5px 10px 20px 20px rgba(0, 0, 0, .95)
+
+.menu header.float
+  position: absolute
+  top: 1px
+  left: 1px
+  width: 98%
+
+.bottom-menu header.float
+  position: absolute
+  bottom: 1px
+  left: 1px
+  width: 98%
 </style>

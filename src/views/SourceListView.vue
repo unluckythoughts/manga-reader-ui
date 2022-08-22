@@ -37,7 +37,6 @@ export default class SourceListView extends Vue {
 
 <style lang="sass" scoped>
 .source-list
-  margin: 50px 0 0 0
   display: grid
   grid-template-columns: repeat(auto-fit, 200px)
   justify-content: space-evenly
