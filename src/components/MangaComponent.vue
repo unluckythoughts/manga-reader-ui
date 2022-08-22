@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts">
+import { Routes } from "@/router"
 import { GetterTypes } from "@/store/getters"
 import { MutationTypes } from "@/store/mutations"
 import { Manga, State } from "@/store/types"
@@ -44,7 +45,12 @@ export default class MangaComponent extends Vue {
 
   goto() {
     this.store.commit(MutationTypes.SET_CURRENT_MANGA, this.manga)
-    this.$router.push({ path: "/source/manga", query: { mangaUrl: this.manga.url } })
+    if (this.store.state.inLibrary) {
+      const favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.manga.url)
+      this.$router.push({ name: Routes.FavoriteView, params: { id: favorite.id } })
+    } else {
+      this.$router.push({ path: "/source/manga", query: { mangaUrl: this.manga.url } })
+    }
   }
 }
 </script>

@@ -18,6 +18,7 @@ import { GetterTypes } from "@/store/getters"
 import { Manga, State } from "@/store/types"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
+import _ from "lodash"
 
 @Options({
   components: {
@@ -34,15 +35,38 @@ export default class MangaListView extends Vue {
   }
 
   updateMangaList() {
-    this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_LIST)
+    if (this.store.state.inLibrary) {
+      this.updateLibrary()
+    } else {
+      this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_LIST)
+    }
   }
 
   castToManga(obj: any): Manga {
     return new Manga(obj)
   }
 
-  get mangaList() {
-    return this.store.getters[GetterTypes.GET_SOURCE_MANGA_LIST]
+  updateLibrary() {
+    this.store.dispatch(ActionTypes.GET_LIBRARY)
+    this.store.dispatch(ActionTypes.GET_SOURCE_LIST)
+  }
+
+  mounted() {
+    if (
+      this.$route.path.startsWith("/library") &&
+      this.store.getters[GetterTypes.GET_FAVORITES].length <= 0
+    ) {
+      this.updateLibrary()
+    }
+  }
+
+  get mangaList(): Manga[] {
+    if (this.store.state.inLibrary) {
+      const favorites = this.store.getters[GetterTypes.GET_FAVORITES]
+      return _.map(favorites, f => f.manga)
+    } else {
+      return this.store.getters[GetterTypes.GET_SOURCE_MANGA_LIST]
+    }
   }
 }
 </script>

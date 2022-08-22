@@ -3,6 +3,7 @@ import { Manga, State } from "./types"
 export enum MutationTypes {
   SET_READER_MODE = "SET_READER_MODE",
   SET_LOADING = "SET_LOADING",
+  SET_IN_LIBRARY = "SET_IN_LIBRARY",
 
   CLEAR_LIBRARY = "CLEAR_LIBRARY",
   SET_LIBRARY = "SET_LIBRARY",
@@ -29,6 +30,9 @@ export const mutations = {
   },
   [MutationTypes.SET_READER_MODE](state: State, payload: boolean) {
     state.inReadingMode = payload
+  },
+  [MutationTypes.SET_IN_LIBRARY](state: State, payload: boolean) {
+    state.inLibrary = payload
   },
   [MutationTypes.SET_CURRENT_MANGA](state: State, payload: Manga) {
     state.currentManga = payload

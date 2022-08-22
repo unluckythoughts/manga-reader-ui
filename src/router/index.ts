@@ -1,5 +1,7 @@
-import LibraryView from "@/views/LibraryView.vue"
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
+import { store } from "@/store"
+import { MutationTypes } from "@/store/mutations"
+import MangaListView from "@/views/MangaListView.vue"
+import { createRouter, createWebHistory, NavigationHookAfter, RouteLocationNormalized, RouteRecordRaw } from "vue-router"
 
 export enum Routes {
   LibraryView = "LibraryView",
@@ -19,7 +21,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/library",
     name: Routes.LibraryView,
-    component: LibraryView
+    component: MangaListView
   },
   {
     path: "/library/updates/all",
@@ -39,7 +41,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/source/mangas",
     name: Routes.SourceMangaListView,
-    component: () => import(/* webpackChunkName: "sourcelistview" */ "../views/MangaListView.vue")
+    component: MangaListView
   },
   {
     path: "/source/manga",
@@ -56,12 +58,26 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-  scrollBehavior() {
+  scrollBehavior(to: RouteLocationNormalized) {
     // always scroll to top
     const content = document.getElementById("content") || new HTMLElement()
     content.scrollTop = 0
 
     return { top: 0 }
+  }
+})
+
+router.beforeResolve((to: RouteLocationNormalized) => {
+  if (store !== undefined) {
+    if (to.path.startsWith("/library")) {
+      if (!store.state.inLibrary) {
+        store.commit(MutationTypes.SET_IN_LIBRARY, true)
+      }
+    } else if (to.path.startsWith("/source")) {
+      if (store.state.inLibrary) {
+        store.commit(MutationTypes.SET_IN_LIBRARY, false)
+      }
+    }
   }
 })
 

@@ -10,6 +10,7 @@ import { Manga, State } from "./types"
 const state: State = {
   inReadingMode: false,
   pageLoading: false,
+  inLibrary: true,
   apiBaseUrl: "http://localhost:5678",
   currentManga: new Manga()
 }

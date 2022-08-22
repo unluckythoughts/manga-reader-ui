@@ -79,6 +79,7 @@ export class DayUpdate {
 export type State = {
   inReadingMode: boolean
   pageLoading: boolean
+  inLibrary: boolean
   apiBaseUrl: string
   currentManga: Manga
 }

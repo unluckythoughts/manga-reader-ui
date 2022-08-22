@@ -46,12 +46,12 @@ export const actions = {
       commit(MutationTypes.SET_LOADING, false)
     }
   },
-  async [ActionTypes.UPDATE_FAVORITE_PROGRESS]({ state, rootState, commit }: ActionContext<LibraryState, State>, payload: { read: boolean, index: number }) {
+  async [ActionTypes.UPDATE_FAVORITE_PROGRESS]({ state, rootState, commit }: ActionContext<LibraryState, State>, payload: { read: boolean, index: number, pageId: number }) {
     const i = _.findIndex(state.favorites, el => el.manga.id === rootState.currentManga.id)
     if (i >= 0) {
       const favorite = state.favorites[i]
 
-      let pageId = 0
+      let pageId = payload.pageId
       if (payload.read) {
         if (payload.index > 0) {
           payload.index = payload.index - 1
