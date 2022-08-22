@@ -5,6 +5,7 @@ import { State } from "./types"
 
 export enum ActionTypes {
   GET_LIBRARY = "GET_LIBRARY",
+  ADD_FAVORITE = "ADD_FAVORITE",
   UPDATE_LIBRARY = "UPDATE_LIBRARY",
   UPDATE_FAVORITE_INFO = "UPDATE_FAVORITE_INFO",
 

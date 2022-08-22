@@ -86,7 +86,7 @@ export default class MangaView extends Vue {
   }
 
   toggleFavorite() {
-    this.store.dispatch(ActionTypes.UPDATE_LIBRARY, this.store.state.currentManga.url)
+    this.store.dispatch(ActionTypes.ADD_FAVORITE, this.store.state.currentManga.url)
   }
 
   castToChapter(obj?: any): Chapter {

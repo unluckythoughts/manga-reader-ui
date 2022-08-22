@@ -24,9 +24,18 @@ export const actions = {
     commit(MutationTypes.SET_LIBRARY, favorites)
     commit(MutationTypes.SET_LOADING, false)
   },
-  async [ActionTypes.UPDATE_LIBRARY]({ rootState }: ActionContext<LibraryState, State>, payload: string) {
+  async [ActionTypes.ADD_FAVORITE]({ rootState }: ActionContext<LibraryState, State>, payload: string) {
     const url = rootState.apiBaseUrl + "/library"
     await axios.post(url, { mangaUrl: payload })
+  },
+  async [ActionTypes.UPDATE_LIBRARY]({ commit, rootState, dispatch }: ActionContext<LibraryState, State>) {
+    commit(MutationTypes.SET_LOADING, true)
+
+    const url = rootState.apiBaseUrl + "/library"
+    await axios.patch(url, {}, { timeout: 20000 })
+
+    dispatch(ActionTypes.GET_LIBRARY)
+    commit(MutationTypes.SET_LOADING, false)
   },
   async [ActionTypes.UPDATE_FAVORITE_INFO]({ commit, rootState }: ActionContext<LibraryState, State>, payload: number) {
     commit(MutationTypes.SET_LOADING, true)
