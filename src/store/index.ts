@@ -4,7 +4,7 @@ import { actions } from "./actions"
 import { connector } from "./connector"
 import { getters } from "./getters"
 import { library } from "./library"
-import { mutations } from "./mutations"
+import { mutations, MutationTypes } from "./mutations"
 import { Manga, State } from "./types"
 
 const state: State = {
@@ -16,7 +16,14 @@ const state: State = {
 
 const vuexLocal = new VuexPersistence<State>({
   key: "manga-reader",
-  storage: window.localStorage
+  storage: window.localStorage,
+  filter(mutation) {
+    if (mutation.type === MutationTypes.SET_LOADING) {
+      return false
+    }
+
+    return true
+  }
 })
 
 export const store = createStore({
