@@ -33,6 +33,7 @@ export default class AppView extends Vue {
 
 <style lang="sass">
 @import "./assets/sass/generic"
+
 .app
   height: 100%
   display: grid

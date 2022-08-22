@@ -47,7 +47,7 @@ export const actions = {
     }
   },
   async [ActionTypes.UPDATE_FAVORITE_PROGRESS]({ state, rootState, commit }: ActionContext<LibraryState, State>, payload: { read: boolean, index: number, pageId: number }) {
-    const i = _.findIndex(state.favorites, el => el.manga.id === rootState.currentManga.id)
+    const i = _.findIndex(state.favorites, el => el.manga.url === rootState.currentManga.url)
     if (i >= 0) {
       const favorite = state.favorites[i]
 
@@ -61,6 +61,7 @@ export const actions = {
       }
 
       const url = rootState.apiBaseUrl + "/library/" + favorite.id + "/chapter/" + favorite.manga.chapters[payload.index].number + "/progress/" + pageId
+
       await axios.put(url)
       const progress = [parseFloat(favorite.manga.chapters[payload.index].number), pageId]
       commit(MutationTypes.UPDATE_FAVORITE_PROGRESS, { id: favorite.id, progress: progress })

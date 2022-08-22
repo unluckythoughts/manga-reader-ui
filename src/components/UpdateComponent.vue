@@ -22,6 +22,7 @@ import moment from "moment"
 import { ActionTypes } from "@/store/actions"
 import { MutationTypes } from "@/store/mutations"
 import { Routes } from "@/router"
+import { setAltImg } from "@/utils/utils"
 
 @Options({
   props: {
@@ -44,14 +45,7 @@ export default class PageComponent extends Vue {
   }
 
   setAltImg(e: Event) {
-    if (e.type === "error") {
-      const img = (e.target as HTMLImageElement)
-      const imgSrc = img.getAttribute("src")
-      if (imgSrc !== "" && !imgSrc?.startsWith(this.store.state.apiBaseUrl)) {
-        const newSrc = this.store.state.apiBaseUrl + "/_proxy/" + imgSrc?.replace(/^\/\//, "http://")
-        img.setAttribute("src", newSrc)
-      }
-    }
+    return setAltImg(e, this.store.state.apiBaseUrl)
   }
 
   gotoReader(i: number, f: Favorite) {

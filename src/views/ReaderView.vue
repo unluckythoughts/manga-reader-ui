@@ -76,16 +76,21 @@ export default class ReaderView extends Vue {
   }
 
   updateProgress() {
-    this.scrollTarget.querySelectorAll(".page img").forEach((el, i) => {
+    const pages = this.scrollTarget.querySelectorAll(".page img")
+    pages.forEach((el, i) => {
       const rect = el.getBoundingClientRect()
       if (rect.top < this.scrollTarget.clientHeight) {
         if (rect.height + rect.top > 0) {
           if (i > this.currentPage) {
             this.currentPage = i
+            let pageId = this.currentPage
+            if (this.currentPage >= pages.length - 1) {
+              pageId = -1
+            }
             this.store.dispatch(ActionTypes.UPDATE_FAVORITE_PROGRESS, {
               read: false,
               index: Number(this.$route.params.id || "0"),
-              pageId: this.currentPage
+              pageId: pageId
             })
           }
         }
