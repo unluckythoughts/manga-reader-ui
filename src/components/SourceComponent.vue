@@ -34,7 +34,9 @@ export default class SourceComponent extends Vue {
   }
 
   goto() {
-    this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_LIST, this.source.domain)
+    if (this.source.mangaList.length <= 0) {
+      this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_LIST, this.source.domain)
+    }
     this.$router.push({ path: "/source/mangas", query: { domain: this.source.domain } })
   }
 }

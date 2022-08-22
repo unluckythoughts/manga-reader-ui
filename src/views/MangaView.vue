@@ -5,8 +5,8 @@
 .loading(v-if="this.store.state.pageLoading")
   h1 loading
 .info
-  .icon
-    img.icon(@error="this.setAltImg", :src="this.manga().imageUrl")
+  .manga-icon
+    img.manga(@error="this.setAltImg", :src="this.manga().imageUrl")
     img.source(:src="this.sourceIcon()")
   .details
     h1.title(tabindex="0") {{ this.manga().title }}
@@ -108,7 +108,7 @@ export default class MangaView extends Vue {
   grid-template-areas: "img details" "img details"
   user-select: none
   gap: 10px
-  .icon
+  .manga-icon
     grid-area: img
     width: 300px
 

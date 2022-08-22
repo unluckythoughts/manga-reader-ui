@@ -3,14 +3,17 @@
   fa-icon.icon(icon="fa-redo")
   span.title refresh
 .source-list
-  SourceComponent(v-for="source in this.sources", :source="source")
+  SourceComponent(
+    v-for="source in this.sources",
+    :source="this.castToSource(source)"
+  )
 </template>
 
 <script lang="ts">
 import SourceComponent from "@/components/SourceComponent.vue" // @ is an alias to /src
 import { ActionTypes } from "@/store/actions"
 import { GetterTypes } from "@/store/getters"
-import { State } from "@/store/types"
+import { Source, State } from "@/store/types"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 
@@ -36,6 +39,10 @@ export default class SourceListView extends Vue {
     if (this.store.getters[GetterTypes.GET_SOURCE_MANGA_LIST].length <= 0) {
       this.getSources()
     }
+  }
+
+  castToSource(obj: any): Source {
+    return new Source(obj)
   }
 
   get sources() {
