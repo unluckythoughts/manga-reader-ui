@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 import LibraryView from "@/views/LibraryView.vue"
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 
 export enum Routes {
   LibraryView = "LibraryView",
@@ -55,7 +55,14 @@ const routes: Array<RouteRecordRaw> = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
+  scrollBehavior() {
+    // always scroll to top
+    const content = document.getElementById("content") || new HTMLElement()
+    content.scrollTop = 0
+
+    return { top: 0 }
+  }
 })
 
 export default router
