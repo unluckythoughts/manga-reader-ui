@@ -2,9 +2,9 @@
 #refresh(v-if="!this.store.state.pageLoading", @click="this.updateMangaList()")
   fa-icon.icon(icon="fa-redo")
   span.title refresh
+.loading(v-if="this.store.state.pageLoading")
+  h1 loading
 .manga-list
-  .loading(v-if="this.store.state.pageLoading")
-    h1 loading
   MangaComponent(
     v-for="manga in this.mangaList",
     :manga="this.castToManga(manga)"
@@ -38,7 +38,8 @@ export default class MangaListView extends Vue {
     if (this.store.state.inLibrary) {
       this.updateLibrary()
     } else {
-      this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_LIST)
+      const domain = this.store.getters[GetterTypes.GET_CURRENT_DOMAIN]
+      this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_LIST, { domain: domain, force: true })
     }
   }
 
@@ -48,7 +49,6 @@ export default class MangaListView extends Vue {
 
   updateLibrary() {
     this.store.dispatch(ActionTypes.GET_LIBRARY)
-    this.store.dispatch(ActionTypes.GET_SOURCE_LIST)
   }
 
   mounted() {

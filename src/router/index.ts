@@ -78,6 +78,7 @@ router.beforeResolve((to: RouteLocationNormalized) => {
         store.commit(MutationTypes.SET_IN_LIBRARY, false)
       }
     }
+    store.commit(MutationTypes.SET_LOADING, false)
   }
 })
 

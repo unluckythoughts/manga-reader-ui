@@ -19,6 +19,9 @@ export const getters = {
   [GetterTypes.GET_SOURCE_LIST](state: ConnectorState): Array<Source> {
     return state.connectors
   },
+  [GetterTypes.GET_CURRENT_DOMAIN](state: ConnectorState): string {
+    return state.currentDomain
+  },
   [GetterTypes.GET_SOURCE_MANGA_LIST](state: ConnectorState): Manga[] {
     const i = _.findIndex(state.connectors, el => el.domain === state.currentDomain)
     if (i >= 0) {

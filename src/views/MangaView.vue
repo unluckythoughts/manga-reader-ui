@@ -99,7 +99,7 @@ export default class MangaView extends Vue {
     if (this.store.state.inLibrary) {
       this.store.dispatch(ActionTypes.UPDATE_FAVORITE_INFO, this.$route.params.id)
     } else {
-      this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_INFO, this.$route.query.mangaUrl)
+      this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_INFO, { url: this.$route.query.mangaUrl, force: true })
     }
   }
 

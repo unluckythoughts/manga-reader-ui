@@ -7,13 +7,13 @@ import { MutationTypes } from "../mutations"
 import { Chapter, Manga, Source, State } from "../types"
 
 export const actions = {
-  async [ActionTypes.GET_SOURCE_MANGA_LIST]({ commit, rootState }: ActionContext<ConnectorState, State>, payload: string) {
+  async [ActionTypes.GET_SOURCE_MANGA_LIST]({ commit, rootState }: ActionContext<ConnectorState, State>, payload: { domain: string, force: boolean }) {
     commit(MutationTypes.CLEAR_SOURCE_MANGA_LIST)
     commit(MutationTypes.SET_LOADING, true)
-    commit(MutationTypes.SET_SOURCE_DOMAIN, payload)
+    commit(MutationTypes.SET_SOURCE_DOMAIN, payload.domain)
 
     const url = rootState.apiBaseUrl + "/source"
-    const resp = await axios.post(url, { domain: payload })
+    const resp = await axios.post(url, { domain: payload.domain, force: payload.force })
     const mangaList = new Array<Manga>()
     for (const i in resp.data.data) {
       mangaList.push(new Manga(resp.data.data[i]))
@@ -21,11 +21,11 @@ export const actions = {
     commit(MutationTypes.SET_SOURCE_MANGA_LIST, mangaList)
     commit(MutationTypes.SET_LOADING, false)
   },
-  async [ActionTypes.GET_SOURCE_MANGA_INFO]({ commit, rootState }: ActionContext<ConnectorState, State>, payload: string) {
+  async [ActionTypes.GET_SOURCE_MANGA_INFO]({ commit, rootState }: ActionContext<ConnectorState, State>, payload: { url: string, force: boolean }) {
     commit(MutationTypes.SET_LOADING, true)
 
     const url = rootState.apiBaseUrl + "/source/manga"
-    const resp = await axios.post(url, { mangaUrl: payload })
+    const resp = await axios.post(url, { mangaUrl: payload.url, force: payload.force })
     const manga = new Manga(resp.data.data)
     manga.chapters = _.orderBy(manga.chapters,
       (e: Chapter) => Number(e.number.replace(/^([0-9]+).*/g, "$1")), "desc")
