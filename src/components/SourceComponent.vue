@@ -5,6 +5,7 @@
 
 <script lang="ts">
 import { ActionTypes } from "@/store/actions"
+import { MutationTypes } from "@/store/mutations"
 import { Source, State } from "@/store/types"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
@@ -36,6 +37,8 @@ export default class SourceComponent extends Vue {
   goto() {
     if (this.source.mangaList.length <= 0) {
       this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_LIST, this.source.domain)
+    } else {
+      this.store.commit(MutationTypes.SET_SOURCE_DOMAIN, this.source.domain)
     }
     this.$router.push({ path: "/source/mangas", query: { domain: this.source.domain } })
   }

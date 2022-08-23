@@ -16,13 +16,17 @@
     .actions
       span.web
         fa-icon.web(icon="fa-external-link", size="3x")
-      span.favorite
-        fa-icon#favorited(
+      span.favorite(:class="{ source: !this.store.state.inLibrary }")
+        fa-icon(
           icon="fa-heart",
           @click="this.toggleFavorite()",
           size="3x",
-          :class="{ favorited: this.inLibrary }"
+          :class="{ favorited: this.store.state.inLibrary }"
         )
+      span.button(v-if="this.store.state.inLibrary")
+        #resume(@click="this.resume()")
+          fa-icon.icon(icon="fa-play", size="3x")
+          span.title Resume
 .chapters
   h2 Chapters
   .chapter(
@@ -38,10 +42,11 @@ import { Routes } from "@/router"
 import { ActionTypes } from "@/store/actions"
 import { GetterTypes } from "@/store/getters"
 import { MutationTypes } from "@/store/mutations"
-import { Chapter, State } from "@/store/types"
+import { Chapter, Favorite, State } from "@/store/types"
 import { getSourceIcon, setAltImg } from "@/utils/utils"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
+import _ from "lodash"
 
 @Options({
   components: {
@@ -50,7 +55,6 @@ import { Store, useStore } from "vuex"
 })
 export default class MangaView extends Vue {
   store!: Store<State>
-  inLibrary = false
 
   data() {
     return {
@@ -72,7 +76,7 @@ export default class MangaView extends Vue {
   }
 
   isRead(c: Chapter): boolean {
-    if (this.inLibrary) {
+    if (this.store.state.inLibrary) {
       const favorite = this.store.getters[GetterTypes.GET_FAVORITE](this.$route.params.id)
       return (favorite.progress[0] > parseInt(c.number)) ||
         (favorite.progress[0] === parseInt(c.number) && favorite.progress[1] === -1)
@@ -83,7 +87,7 @@ export default class MangaView extends Vue {
 
   mounted() {
     if (this.$route.name === Routes.FavoriteView) {
-      this.inLibrary = true
+      this.store.state.inLibrary = true
     } else {
       if (this.manga().chapters.length <= 0) {
         this.getUpdates()
@@ -92,7 +96,7 @@ export default class MangaView extends Vue {
   }
 
   getUpdates() {
-    if (this.inLibrary) {
+    if (this.store.state.inLibrary) {
       this.store.dispatch(ActionTypes.UPDATE_FAVORITE_INFO, this.$route.params.id)
     } else {
       this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_INFO, this.$route.query.mangaUrl)
@@ -100,7 +104,7 @@ export default class MangaView extends Vue {
   }
 
   toggleFavorite() {
-    if (!this.inLibrary) {
+    if (!this.store.state.inLibrary) {
       this.store.dispatch(ActionTypes.ADD_FAVORITE, this.store.state.currentManga.url)
       setTimeout(() => {
         const favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.store.state.currentManga.url)
@@ -112,6 +116,20 @@ export default class MangaView extends Vue {
     } else {
       this.store.dispatch(ActionTypes.DEL_FAVORITE, this.$route.params.id)
       this.$router.replace({ name: Routes.SourceMangaView, query: { mangaUrl: this.store.state.currentManga.url } })
+    }
+  }
+
+  resume() {
+    const favorite: Favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.store.state.currentManga.url)
+    console.log("$$$", favorite, this.store.state.currentManga.url)
+    const index = _.findIndex(favorite.manga.chapters, c => parseFloat(c.number) === favorite.progress[0])
+    this.store.dispatch(ActionTypes.GET_SOURCE_CHAPTER_INFO, index)
+    if (favorite.progress[1] >= 0) {
+      this.$router.push({ name: Routes.ReaderView, params: { id: index }, hash: "#page-" + favorite.progress[1] })
+    } else {
+      if (index > 0) {
+        this.$router.push({ name: Routes.ReaderView, params: { id: index - 1 } })
+      }
     }
   }
 
@@ -154,27 +172,38 @@ export default class MangaView extends Vue {
       display: grid
       grid-template-columns: 1fr 1fr 3fr
 
-      .web svg
+      .web
+        display: flex
+        justify-content: center
+        align-items: center
         cursor: pointer
 
-      #favorited.favorited
-        color: aqua
-        cursor: pointer
-      button
-        background-color: #222
-        color: #ffffff
-        box-shadow: none
-        outline: none
-        border: none
-        font-size: 18px
-        height: 50px
-        padding: 0 10px
+        svg
+          color: lighten(teal, 15)
+          &:hover
+            color: lighten(teal, 25)
+
+      .favorite
+        display: flex
+        justify-content: center
+        align-items: center
         cursor: pointer
 
-        &:hover
-          font-size: 1.2rem
-          background-color: #444
-          box-shadow: 5px 10px 20px 20px rgba(0, 0, 0, .95)
+        svg
+          color: lighten(teal, 15)
+          &:hover
+            color: lighten(teal, 25)
+
+        &.source
+          svg
+            color: white
+            &:hover
+              color: lighten(teal, 25)
+
+      .button
+        display: flex
+        justify-content: center
+        align-items: center
 
 .chapters
   display: grid

@@ -74,8 +74,10 @@ export default class MangaListView extends Vue {
 <style lang="sass" scoped>
 .manga-list
   display: grid
-  grid-template-columns: repeat( auto-fit, minmax(200px, 1fr) )
-  align-content: space-around
+  grid-template-columns: repeat( auto-fit, minmax(240px, 1fr) )
+  align-content: space-evenly
+  align-items: space-evenly
   justify-content: space-evenly
+  justify-items: space-evenly
   gap: 10px
 </style>

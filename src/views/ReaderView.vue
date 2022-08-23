@@ -5,7 +5,11 @@
     button(@click="this.$router.go(-1)") Close
     button(@click="this.goNext()") Next
 .pages
-  PageComponent(v-for="url in this.imageUrls", :image-url="url")
+  PageComponent(
+    v-for="(url, i) in this.imageUrls",
+    :image-url="url",
+    :id="'page-' + i"
+  )
 
 .bottom-menu(:class="{ float: this.scrollingUp }")
   header(:class="{ float: this.scrollingUp }")
@@ -48,6 +52,14 @@ export default class ReaderView extends Vue {
 
     this.scrollTarget = document.getElementById("content") || new HTMLElement()
     this.scrollTarget?.addEventListener("scroll", this.scrolled)
+
+    const hash = this.$route.hash
+    if (hash !== "") {
+      setTimeout(() => {
+        const img = document.getElementById(hash.replace("#", ""))
+        this.scrollTarget.scrollTop = img?.getBoundingClientRect().top || 0
+      }, 500)
+    }
   }
 
   beforeUnmount() {
