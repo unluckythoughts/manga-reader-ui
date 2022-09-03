@@ -166,6 +166,7 @@ export default class MangaView extends Vue {
   .manga-icon
     grid-area: img
     width: 300px
+    max-height: 400px
 
   .details
     grid-area: details

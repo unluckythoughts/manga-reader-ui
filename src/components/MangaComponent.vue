@@ -1,5 +1,5 @@
 <template lang="pug">
-.manga(@click="this.goto()", :class="{ favorited: this.isFavorite }")
+.manga(@click="this.goto()")
   .manga-icon
     img.manga(
       :src="this.manga.imageUrl",
@@ -8,6 +8,8 @@
     )
     img.source(:src="this.manga.source.iconUrl", loading="lazy")
   p.title {{ this.manga.title }}
+  p.favorited(v-if="this.isFavorite")
+    fa-icon.icon(icon="fa-heart")
 </template>
 
 <script lang="ts">
@@ -48,7 +50,6 @@ export default class MangaComponent extends Vue {
     if (!inLibrary) {
       const favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.manga.url)
       if (favorite.id !== 0) {
-        console.log("$$$", this.manga.url, favorite.id)
         return true
       }
     }
@@ -98,8 +99,14 @@ export default class MangaComponent extends Vue {
     justify-content: center
     align-items: flex-end
 
-  &.favorited::before
-    content: 'favorited'
+  p.favorited
+    grid-column-start: 1
+    grid-row-start: 1
+    display: flex
     align-items: center
-    box-shadow: inset 0 -350px 0px 0 rgba(0,0,0,.5)
+    justify-content: center
+    margin: 0px
+    box-shadow: inset 0 -300px 0px 0 rgba(0,0,0,.5)
+    font-size: 80px
+    color: lighten(teal, 15)
 </style>

@@ -13,10 +13,12 @@ export const actions = {
 
     const url = rootState.apiBaseUrl + "/source"
     const resp = await axios.post(url, { domain: payload.domain, force: payload.force })
-    const mangaList = new Array<Manga>()
+    let mangaList = new Array<Manga>()
     for (const i in resp.data.data) {
       mangaList.push(new Manga(resp.data.data[i]))
     }
+    mangaList = _.orderBy(mangaList, (e: Manga) => e.title, "asc")
+
     commit(MutationTypes.SET_SOURCE_MANGA_LIST, mangaList)
     commit(MutationTypes.SET_LOADING, false)
   },
