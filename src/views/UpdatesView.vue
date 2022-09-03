@@ -35,7 +35,12 @@ export default class MangaListView extends Vue {
   }
 
   get updateList(): Array<DayUpdate> {
-    return this.store.getters[GetterTypes.GET_UPDATES]
+    const updates = this.store.getters[GetterTypes.GET_UPDATES]
+    if (updates.length <= 0) {
+      this.store.dispatch(ActionTypes.GET_LIBRARY)
+    }
+
+    return updates
   }
 }
 </script>
