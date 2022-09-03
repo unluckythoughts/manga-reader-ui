@@ -2,12 +2,10 @@
 #refresh(v-if="!this.store.state.pageLoading", @click="this.getUpdates()")
   fa-icon.icon(icon="fa-redo")
   span.title update
-.loading(v-if="this.store.state.pageLoading")
-  h1 loading
 .info
   .manga-icon
     img.manga(@error="this.setAltImg", :src="this.manga.imageUrl")
-    img.source(:src="this.manga.source.iconUrl")
+    img.source(@error="this.setAltImg", :src="this.manga.source.iconUrl")
   .details
     h1.title(tabindex="0") {{ this.manga.title }}
     .synopsis

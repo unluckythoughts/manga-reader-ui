@@ -1,6 +1,4 @@
 <template lang="pug">
-.loading(v-if="this.store.state.pageLoading")
-  h1 loading
 .manga-list
   MangaComponent(v-for="manga in this.mangas", :manga="manga")
 </template>

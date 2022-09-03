@@ -1,7 +1,6 @@
 <template lang="pug">
 .page
   ImageComponent(:src="this.imageUrl")
-  p.loading(v-if="this.store.state.pageLoading") loading
 </template>
 
 <script lang="ts">

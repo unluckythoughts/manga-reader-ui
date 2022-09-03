@@ -3,8 +3,6 @@
   fa-icon.icon(icon="fa-redo")
   span.title check for updates
 .updates-list
-  .loading(v-if="this.store.state.pageLoading")
-    h1 loading
   UpdateComponent(v-for="update in this.updateList", :dayUpdate="update")
 </template>
 

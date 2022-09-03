@@ -1,8 +1,12 @@
 <template lang="pug">
 .app(:class="{ reader: this.readingMode() }")
   NavigationComponent(v-if="!this.readingMode()")
-  #content.content
-    router-view
+  .data
+    .loading(v-if="this.store.state.pageLoading")
+      fa-icon.icon.fa-spin(icon="fa-redo")
+    #content.content
+      .router-view
+        router-view
 </template>
 
 <script lang="ts">
@@ -48,4 +52,18 @@ export default class AppView extends Vue {
     padding: 10px
     overflow-x: hidden
     overflow-y: auto
+    display: grid
+
+  .loading
+    z-index: 9
+    position: fixed
+    width: 100%
+    height: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    background: rgba(0, 0, 0, .6)
+
+    .icon
+      font-size: 80px
 </style>

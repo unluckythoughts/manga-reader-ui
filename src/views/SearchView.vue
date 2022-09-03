@@ -9,8 +9,6 @@
     )
 
 .results
-  .loading(v-if="this.store.state.pageLoading")
-    h1 loading
   .result(v-for="result in this.results")
     h2.header {{ result.sourceName }}
     MangaListComponent(:mangas="result.mangaList")
@@ -20,7 +18,7 @@
 import MangaListComponent from "@/components/MangaListComponent.vue"
 import { ActionTypes } from "@/store/actions"
 import { GetterTypes } from "@/store/getters"
-import { Manga, SearchResult, State } from "@/store/types"
+import { SearchResult, State } from "@/store/types"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 
