@@ -1,5 +1,11 @@
 <template lang="pug">
-img(:src="this.src", @error="this.setAltImg", loading="lazy")
+img(
+  :src="this.src",
+  @error="this.setAltImg",
+  loading="lazy",
+  @load="this.loaded()",
+  :class="{ done: this.done }"
+)
 </template>
 
 <script lang="ts">
@@ -15,11 +21,17 @@ import { Store, useStore } from "vuex"
 export default class ImageComponent extends Vue {
   src!: string
   store!: Store<State>
+  done = false
 
   data() {
     return {
       store: useStore()
     }
+  }
+
+  loaded() {
+    console.log(this.src)
+    this.done = true
   }
 
   setAltImg(e: Event) {
@@ -40,4 +52,7 @@ img
   display: block
   user-select: none
   width: 100%
+  min-height: 2500px
+  &.done
+    min-height: 0px
 </style>
