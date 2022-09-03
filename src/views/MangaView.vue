@@ -6,10 +6,10 @@
   h1 loading
 .info
   .manga-icon
-    img.manga(@error="this.setAltImg", :src="this.manga().imageUrl")
-    img.source(:src="this.sourceIcon()")
+    img.manga(@error="this.setAltImg", :src="this.manga.imageUrl")
+    img.source(:src="this.manga.source.iconUrl")
   .details
-    h1.title(tabindex="0") {{ this.manga().title }}
+    h1.title(tabindex="0") {{ this.manga.title }}
     .synopsis
       p(v-for="line in this.synopsis()")
         span(v-html="line")
@@ -30,7 +30,7 @@
 .chapters
   h2 Chapters
   .chapter(
-    v-for="(chapter, i) in this.manga().chapters",
+    v-for="(chapter, i) in this.manga.chapters",
     :class="{ completed: this.isRead(chapter) }"
   )
     ChapterComponent(:index="i", :chapter="chapter")
@@ -43,10 +43,10 @@ import { ActionTypes } from "@/store/actions"
 import { GetterTypes } from "@/store/getters"
 import { MutationTypes } from "@/store/mutations"
 import { Chapter, Favorite, State } from "@/store/types"
-import { getSourceIcon, setAltImg } from "@/utils/utils"
+import { setAltImg } from "@/utils/utils"
+import _ from "lodash"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
-import _ from "lodash"
 
 @Options({
   components: {
@@ -62,13 +62,28 @@ export default class MangaView extends Vue {
     }
   }
 
-  manga() {
-    return this.store.state.currentManga
-  }
+  get manga() {
+    let manga = this.store.state.currentManga
+    if (manga.url === "") {
+      if (this.store.state.inLibrary) {
+        const favorite = this.store.getters[GetterTypes.GET_FAVORITE](this.$route.params.id)
+        if (favorite.id !== 0) {
+          this.store.commit(MutationTypes.SET_CURRENT_MANGA, favorite.manga)
+        } else {
+          this.store.dispatch(ActionTypes.GET_LIBRARY)
+          const favorite = this.store.getters[GetterTypes.GET_FAVORITE](this.$route.params.id)
+          if (favorite.id !== 0) {
+            this.store.commit(MutationTypes.SET_CURRENT_MANGA, favorite.manga)
+          }
+        }
+      } else {
+        const mangaUrl = this.$route.query.mangaUrl
+        this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_INFO, { url: mangaUrl, force: false })
+      }
+      manga = this.store.state.currentManga
+    }
 
-  sourceIcon() {
-    const sources = this.store.getters[GetterTypes.GET_SOURCE_LIST]
-    return getSourceIcon(this.manga().url, sources)
+    return manga
   }
 
   setAltImg(e: Event) {
@@ -89,8 +104,9 @@ export default class MangaView extends Vue {
     if (this.$route.name === Routes.FavoriteView) {
       this.store.state.inLibrary = true
     } else {
-      if (this.manga().chapters.length <= 0) {
-        this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_INFO, { url: this.$route.query.mangaUrl, force: false })
+      const mangaUrl = this.$route.query.mangaUrl
+      if (this.manga.chapters.length <= 0) {
+        this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_INFO, { url: mangaUrl, force: true })
       }
     }
   }
@@ -133,7 +149,7 @@ export default class MangaView extends Vue {
   }
 
   synopsis() {
-    const lines = this.manga()?.synopsis.split("\n") || []
+    const lines = this.manga?.synopsis.split("\n") || []
     return lines
   }
 }
