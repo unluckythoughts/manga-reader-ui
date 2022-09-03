@@ -34,5 +34,4 @@ export default class PageComponent extends Vue {
 <style scoped lang="sass">
 .page
   width: 100%
-  min-height: 200px
 </style>

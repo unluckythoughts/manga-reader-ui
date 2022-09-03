@@ -44,8 +44,6 @@ export const getters = {
     })
     // results = _.orderBy(results, (u: DayUpdate) => Number(u.date.replace(/-/g, "")), "desc")
 
-    console.log(results)
-
     return results
   }
 }

@@ -24,7 +24,6 @@ function setCookie(cname: string, cvalue: string, exdays: number) {
   const expires = "expires=" + d.toUTCString()
   const cookie = cname + "=" + cvalue + ";" + expires + ";domain=https://img.mghubcdn.com;path=/"
   document.cookie = cookie
-  console.log("set cookie: ", cookie)
 }
 
 export const actions = {
