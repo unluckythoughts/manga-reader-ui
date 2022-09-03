@@ -6,7 +6,11 @@
       @error="this.setAltImg",
       loading="lazy"
     )
-    img.source(:src="this.manga.source.iconUrl", loading="lazy")
+    img.source(
+      :src="this.manga.source.iconUrl",
+      @error="this.setAltImg",
+      loading="lazy"
+    )
   p.title {{ this.manga.title }}
   p.favorited(v-if="this.isFavorite")
     fa-icon.icon(icon="fa-heart")

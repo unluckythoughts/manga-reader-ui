@@ -15,7 +15,8 @@
         span(v-html="line")
     .actions
       span.web
-        fa-icon.web(icon="fa-external-link", size="3x")
+        a(:href="this.manga.url", target="_blank")
+          fa-icon.web(icon="fa-external-link", size="3x")
       span.favorite(:class="{ source: !this.store.state.inLibrary }")
         fa-icon(
           icon="fa-heart",
@@ -166,7 +167,8 @@ export default class MangaView extends Vue {
   .manga-icon
     grid-area: img
     width: 300px
-    max-height: 400px
+    min-height: 430px
+    max-height: 430px
 
   .details
     grid-area: details

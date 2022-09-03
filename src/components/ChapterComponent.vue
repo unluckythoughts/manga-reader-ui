@@ -3,7 +3,7 @@
   .info(@click="this.gotoReader()")
     .number {{ chapter.number }}
     .title {{ chapter.title }}
-    .uploadDate {{ chapter.uploadDate }}
+    .uploadDate {{ this.since(chapter.uploadDate) }}
   ContextMenuComponent(ref="menu")
     span.option(@click="this.updateProgress(true)") Mark as read
     span.option(@click="this.updateProgress(false)") Mark as unread
@@ -16,6 +16,7 @@ import { ActionTypes } from "@/store/actions"
 import { Chapter, State } from "@/store/types"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
+import moment from "moment"
 
 @Options({
   props: {
@@ -51,6 +52,10 @@ export default class ChapterComponent extends Vue {
   options(e: MouseEvent) {
     e.preventDefault()
     this.$refs.menu.open(e)
+  }
+
+  since(uploadDate: string): string {
+    return moment(uploadDate, "YYYY-MM-DD").fromNow()
   }
 
   gotoReader() {

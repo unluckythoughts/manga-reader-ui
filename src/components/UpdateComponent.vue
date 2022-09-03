@@ -18,9 +18,8 @@ h2.header {{ this.formatDate(this.dayUpdate?.date) }}
 <script lang="ts">
 import { Routes } from "@/router"
 import { ActionTypes } from "@/store/actions"
-import { GetterTypes } from "@/store/getters"
 import { MutationTypes } from "@/store/mutations"
-import { Chapter, DayUpdate, Favorite, State } from "@/store/types"
+import { DayUpdate, Favorite, State } from "@/store/types"
 import { setAltImg } from "@/utils/utils"
 import moment from "moment"
 import { Options, Vue } from "vue-class-component"
@@ -42,8 +41,14 @@ export default class PageComponent extends Vue {
   }
 
   formatDate(date: string): string {
-    const m = moment(date, "YYYY-MM-DD")
-    return m.format("dddd MMMM DD, YYYY")
+    return moment(date, "YYYY-MM-DD").calendar(null, {
+      lastDay: "[Yesterday]",
+      sameDay: "[Today]",
+      nextDay: "[Tomorrow]",
+      lastWeek: "dddd MMMM DD, YYYY",
+      nextWeek: "dddd MMMM DD, YYYY",
+      sameElse: "dddd MMMM DD, YYYY"
+    })
   }
 
   setAltImg(e: Event) {
