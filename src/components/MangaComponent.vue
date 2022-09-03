@@ -1,5 +1,5 @@
 <template lang="pug">
-.manga(@click="this.goto()")
+.manga(@click="this.goto()", :class="{ favorited: this.isFavorite }")
   .manga-icon
     img.manga(
       :src="this.manga.imageUrl",
@@ -43,13 +43,26 @@ export default class MangaComponent extends Vue {
     return getSourceIcon(this.manga.url, sources)
   }
 
+  get isFavorite(): boolean {
+    const inLibrary = this.store.state.inLibrary
+    if (!inLibrary) {
+      const favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.manga.url)
+      if (favorite.id !== 0) {
+        console.log("$$$", this.manga.url, favorite.id)
+        return true
+      }
+    }
+
+    return false
+  }
+
   goto() {
     this.store.commit(MutationTypes.SET_CURRENT_MANGA, this.manga)
-    if (this.store.state.inLibrary) {
-      const favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.manga.url)
+    const favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.manga.url)
+    if (favorite.id !== 0) {
       this.$router.push({ name: Routes.FavoriteView, params: { id: favorite.id } })
     } else {
-      this.$router.push({ path: "/source/manga", query: { mangaUrl: this.manga.url } })
+      this.$router.push({ name: Routes.SourceMangaView, query: { mangaUrl: this.manga.url } })
     }
   }
 }
@@ -84,4 +97,9 @@ export default class MangaComponent extends Vue {
     margin: 10px 0px
     justify-content: center
     align-items: flex-end
+
+  &.favorited::before
+    content: 'favorited'
+    align-items: center
+    box-shadow: inset 0 -350px 0px 0 rgba(0,0,0,.5)
 </style>
