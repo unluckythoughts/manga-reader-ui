@@ -4,7 +4,7 @@ import { actions } from "./actions"
 import { connector } from "./connector"
 import { getters } from "./getters"
 import { library } from "./library"
-import { mutations, MutationTypes } from "./mutations"
+import { mutations } from "./mutations"
 import { Manga, State } from "./types"
 
 const state: State = {
@@ -18,16 +18,12 @@ const state: State = {
 const vuexLocal = new VuexPersistence<State>({
   key: "manga-reader",
   storage: window.localStorage,
-  filter(mutation) {
-    if (
-      mutation.type === MutationTypes.SET_READER_MODE ||
-      mutation.type === MutationTypes.SET_LOADING ||
-      mutation.type === MutationTypes.SET_IN_LIBRARY
-    ) {
-      return false
+  reducer(state: State) {
+    return {
+      currentManga: state.currentManga,
+      library: state.library,
+      connector: state.connector
     }
-
-    return true
   }
 })
 

@@ -1,3 +1,6 @@
+import { ConnectorState } from "./connector"
+import { LibraryState } from "./library"
+
 export class Source {
   name: string
   domain: string
@@ -92,4 +95,6 @@ export type State = {
   inLibrary: boolean
   apiBaseUrl: string
   currentManga: Manga
+  library?: LibraryState
+  connector?: ConnectorState
 }
