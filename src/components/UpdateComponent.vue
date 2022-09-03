@@ -1,7 +1,10 @@
 <template lang="pug">
-h2.date {{ this.formatDate(this.dayUpdate?.date) }}
+h2.header {{ this.formatDate(this.dayUpdate?.date) }}
 .updates
-  .update(v-for="update in this.dayUpdate?.updates")
+  .update(
+    v-for="update in this.dayUpdate?.updates",
+    :class="{ completed: this.isRead(update) }"
+  )
     img(
       :src="update.favorite.manga.imageUrl",
       @error="this.setAltImg",
@@ -13,14 +16,15 @@ h2.date {{ this.formatDate(this.dayUpdate?.date) }}
 </template>
 
 <script lang="ts">
-import { DayUpdate, Favorite, State } from "@/store/types"
+import { Routes } from "@/router"
+import { ActionTypes } from "@/store/actions"
+import { GetterTypes } from "@/store/getters"
+import { MutationTypes } from "@/store/mutations"
+import { Chapter, DayUpdate, Favorite, State } from "@/store/types"
+import { setAltImg } from "@/utils/utils"
+import moment from "moment"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
-import moment from "moment"
-import { ActionTypes } from "@/store/actions"
-import { MutationTypes } from "@/store/mutations"
-import { Routes } from "@/router"
-import { setAltImg } from "@/utils/utils"
 
 @Options({
   props: {
@@ -46,6 +50,12 @@ export default class PageComponent extends Vue {
     return setAltImg(e, this.store.state.apiBaseUrl)
   }
 
+  isRead(c: { index: number, favorite: Favorite }): boolean {
+    const chapter = c.favorite.manga.chapters[c.index]
+    return (c.favorite.progress[0] > parseInt(chapter.number)) ||
+      (c.favorite.progress[0] === parseInt(chapter.number) && c.favorite.progress[1] === -1)
+  }
+
   gotoReader(i: number, f: Favorite) {
     this.store.commit(MutationTypes.SET_CURRENT_MANGA, f.manga)
     this.store.dispatch(ActionTypes.GET_SOURCE_CHAPTER_INFO, i)
@@ -61,7 +71,7 @@ export default class PageComponent extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="sass">
-h2.date
+h2.header
   background-color: #222
   padding: 10px
   margin: 10px auto
@@ -118,4 +128,7 @@ h2.date
       display: flex
       align-items: flex-start
       justify-content: flex-start
+
+.update.completed
+  color: grey !important
 </style>

@@ -76,6 +76,16 @@ export class DayUpdate {
   }
 }
 
+export class SearchResult {
+  sourceName: string
+  mangaList: Array<Manga>
+
+  constructor(obj?: any) {
+    this.sourceName = obj?.sourceName || ""
+    this.mangaList = obj?.mangaList || Array<Manga>()
+  }
+}
+
 export type State = {
   inReadingMode: boolean
   pageLoading: boolean

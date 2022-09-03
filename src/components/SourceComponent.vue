@@ -5,7 +5,6 @@
 
 <script lang="ts">
 import { ActionTypes } from "@/store/actions"
-import { MutationTypes } from "@/store/mutations"
 import { Source, State } from "@/store/types"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"

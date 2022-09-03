@@ -28,7 +28,7 @@ export default class MangaListView extends Vue {
   }
 
   updateMangaList() {
-    const domain = this.store.getters[GetterTypes.GET_CURRENT_DOMAIN]
+    const domain = this.$route.query?.domain
     this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_LIST, { domain: domain, force: true })
   }
 
