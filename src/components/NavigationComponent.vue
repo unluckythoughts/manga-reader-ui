@@ -7,7 +7,9 @@
     li
       router-link(to="/library/updates/all")
         fa-icon(icon="fa-redo", size="xl")
-
+    li
+      router-link(to="/sources/search")
+        fa-icon(icon="fa-search", size="xl")
     li
       router-link(to="/sources")
         fa-icon(icon="fa-globe", size="xl")

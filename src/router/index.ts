@@ -1,12 +1,13 @@
 import { store } from "@/store"
 import { MutationTypes } from "@/store/mutations"
-import MangaListView from "@/views/MangaListView.vue"
-import { createRouter, createWebHistory, NavigationHookAfter, RouteLocationNormalized, RouteRecordRaw } from "vue-router"
+import LibraryView from "@/views/LibraryView.vue"
+import { createRouter, createWebHistory, RouteLocationNormalized, RouteRecordRaw } from "vue-router"
 
 export enum Routes {
   LibraryView = "LibraryView",
   UpdatesView = "UpdatesView",
   FavoriteView = "FavoriteView",
+  SearchView = "SearchView",
   SourceListView = "SourceListView",
   SourceMangaListView = "SourceMangaListView",
   SourceMangaView = "SourceMangaView",
@@ -21,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/library",
     name: Routes.LibraryView,
-    component: MangaListView
+    component: LibraryView
   },
   {
     path: "/library/updates/all",
@@ -39,9 +40,14 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "sourcelistview" */ "../views/SourceListView.vue")
   },
   {
+    path: "/sources/search",
+    name: Routes.SearchView,
+    component: () => import(/* webpackChunkName: "mangaview" */ "../views/SearchView.vue")
+  },
+  {
     path: "/source/mangas",
     name: Routes.SourceMangaListView,
-    component: MangaListView
+    component: () => import(/* webpackChunkName: "mangaview" */ "../views/MangaListView.vue")
   },
   {
     path: "/source/manga",
@@ -58,7 +64,7 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-  scrollBehavior(to: RouteLocationNormalized) {
+  scrollBehavior() {
     // always scroll to top
     const content = document.getElementById("content") || new HTMLElement()
     content.scrollTop = 0

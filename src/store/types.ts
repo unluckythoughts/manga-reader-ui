@@ -1,3 +1,15 @@
+export class Source {
+  name: string
+  domain: string
+  iconUrl: string
+
+  constructor(obj?: any) {
+    this.name = obj?.name || ""
+    this.domain = obj?.domain || ""
+    this.iconUrl = obj?.iconUrl || ""
+  }
+}
+
 export class Chapter {
   id: number
   url: string
@@ -22,6 +34,7 @@ export class Manga {
   title: string
   imageUrl: string
   synopsis: string
+  source: Source
   chapters: Array<Chapter>
 
   constructor(obj?: any) {
@@ -30,25 +43,12 @@ export class Manga {
     this.title = obj?.title || ""
     this.imageUrl = obj?.imageUrl || ""
     this.synopsis = obj?.synopsis || ""
+    this.source = obj?.source || new Source()
     this.chapters = []
 
     for (const i in obj?.chapters) {
       this.chapters.push(new Chapter(obj?.chapters[i]))
     }
-  }
-}
-
-export class Source {
-  name: string
-  domain: string
-  iconUrl: string
-  mangaList: Array<Manga>
-
-  constructor(obj?: any) {
-    this.name = obj?.name || ""
-    this.domain = obj?.domain || ""
-    this.iconUrl = obj?.iconUrl || ""
-    this.mangaList = obj?.mangaList || []
   }
 }
 

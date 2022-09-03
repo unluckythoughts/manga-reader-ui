@@ -6,7 +6,7 @@
       @error="this.setAltImg",
       loading="lazy"
     )
-    img.source(:src="this.sourceIcon()", loading="lazy")
+    img.source(:src="this.manga.source.iconUrl", loading="lazy")
   p.title {{ this.manga.title }}
 </template>
 

@@ -4,13 +4,13 @@ import { getters } from "./getters"
 import { mutations } from "./mutations"
 
 export type ConnectorState = {
-  currentDomain: string
   connectors: Array<Source>
+  mangaList: Array<Manga>
 }
 
 const state: ConnectorState = {
-  currentDomain: "",
-  connectors: new Array<Source>()
+  connectors: new Array<Source>(),
+  mangaList: new Array<Manga>()
 }
 
 export const connector = {

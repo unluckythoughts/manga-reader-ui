@@ -15,6 +15,16 @@ export enum ActionTypes {
   GET_SOURCE_MANGA_LIST = "GET_SOURCE_MANGA_LIST",
   GET_SOURCE_MANGA_INFO = "GET_SOURCE_MANGA_INFO",
   GET_SOURCE_CHAPTER_INFO = "GET_SOURCE_CHAPTER_INFO",
+  SEARCH_SOURCES = "SEARCH_SOURCES"
+}
+
+function setCookie(cname: string, cvalue: string, exdays: number) {
+  const d = new Date()
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000))
+  const expires = "expires=" + d.toUTCString()
+  const cookie = cname + "=" + cvalue + ";" + expires + ";domain=https://img.mghubcdn.com;path=/"
+  document.cookie = cookie
+  console.log("set cookie: ", cookie)
 }
 
 export const actions = {
@@ -24,7 +34,16 @@ export const actions = {
     const url = state.apiBaseUrl + "/source/chapter"
     const resp = await axios.post(url, { chapterUrl: state.currentManga.chapters[payload].url })
 
-    commit(MutationTypes.SET_CHAPTER_PAGES, { index: payload, pages: resp.data.data })
+    if (resp.data.data.config !== undefined && resp.data.data.config !== null) {
+      const { cookies } = resp.data.data.config
+      if (cookies !== undefined && cookies !== undefined) {
+        for (const k in cookies) {
+          setCookie(k, cookies[k], 1)
+        }
+      }
+    }
+
+    commit(MutationTypes.SET_CHAPTER_PAGES, { index: payload, pages: resp.data.data.urls })
     commit(MutationTypes.SET_LOADING, false)
   }
 }

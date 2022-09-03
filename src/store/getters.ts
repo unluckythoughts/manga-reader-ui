@@ -9,7 +9,7 @@ export enum GetterTypes {
   GET_SOURCE_LIST = "GET_SOURCE_LIST",
   GET_CURRENT_DOMAIN = "GET_CURRENT_DOMAIN",
   GET_SOURCE_MANGA_LIST = "GET_SOURCE_MANGA_LIST",
-  GET_PAGES = "GET_PAGES"
+  GET_PAGES = "GET_PAGES",
 }
 
 export const getters = {

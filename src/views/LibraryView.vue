@@ -10,6 +10,7 @@ import MangaListComponent from "@/components/MangaListComponent.vue"
 import { ActionTypes } from "@/store/actions"
 import { GetterTypes } from "@/store/getters"
 import { Manga, State } from "@/store/types"
+import _ from "lodash"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 
@@ -28,13 +29,16 @@ export default class MangaListView extends Vue {
   }
 
   updateMangaList() {
-    const domain = this.store.getters[GetterTypes.GET_CURRENT_DOMAIN]
-    this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_LIST, { domain: domain, force: true })
+    this.store.dispatch(ActionTypes.GET_LIBRARY)
+  }
+
+  mounted() {
+    this.store.dispatch(ActionTypes.GET_LIBRARY)
   }
 
   get mangaList(): Array<Manga> {
-    const mangas = this.store.getters[GetterTypes.GET_SOURCE_MANGA_LIST]
-    return mangas.slice(0, 100)
+    const favorites = this.store.getters[GetterTypes.GET_FAVORITES]
+    return _.map(favorites, f => f.manga)
   }
 }
 </script>

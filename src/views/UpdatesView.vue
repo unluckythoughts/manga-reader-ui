@@ -5,10 +5,7 @@
 .updates-list
   .loading(v-if="this.store.state.pageLoading")
     h1 loading
-  UpdateComponent(
-    v-for="update in this.updateList",
-    :dayUpdate="this.castToDayUpdate(update)"
-  )
+  UpdateComponent(v-for="update in this.updateList", :dayUpdate="update")
 </template>
 
 <script lang="ts">
@@ -31,10 +28,6 @@ export default class MangaListView extends Vue {
     return {
       store: useStore()
     }
-  }
-
-  castToDayUpdate(obj: any): DayUpdate {
-    return new DayUpdate(obj)
   }
 
   getUpdates() {

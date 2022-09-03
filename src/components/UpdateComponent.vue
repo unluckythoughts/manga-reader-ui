@@ -1,17 +1,15 @@
 <template lang="pug">
 h2.date {{ this.formatDate(this.dayUpdate?.date) }}
 .updates
-  .update(
-    v-for="update in this.dayUpdate?.updates",
-    @click="this.gotoReader(update.index, update.favorite)"
-  )
+  .update(v-for="update in this.dayUpdate?.updates")
     img(
       :src="update.favorite.manga.imageUrl",
       @error="this.setAltImg",
-      loading="lazy"
+      loading="lazy",
+      @click="this.gotoReader(update.index, update.favorite)"
     )
-    p.title {{ update.favorite.manga.title }}
-    p.chapter {{ update.favorite.manga.chapters[update.index].title }}
+    p.title(@click="this.gotoManga(update.favorite)") {{ update.favorite.manga.title }}
+    p.chapter(@click="this.gotoReader(update.index, update.favorite)") {{ update.favorite.manga.chapters[update.index].title }}
 </template>
 
 <script lang="ts">
@@ -53,6 +51,11 @@ export default class PageComponent extends Vue {
     this.store.dispatch(ActionTypes.GET_SOURCE_CHAPTER_INFO, i)
     this.$router.push({ name: Routes.ReaderView, params: { id: i } })
   }
+
+  gotoManga(f: Favorite) {
+    this.store.commit(MutationTypes.SET_CURRENT_MANGA, f.manga)
+    this.$router.push({ name: Routes.FavoriteView, params: { id: f.id } })
+  }
 }
 </script>
 
@@ -80,6 +83,8 @@ h2.date
     gap: 5px
     cursor: pointer
     user-select: none
+    &:hover
+      box-shadow: 15px 10px 20px 20px rgba(0, 0, 0, .95)
 
     img
       height: 100px
@@ -99,6 +104,8 @@ h2.date
       align-items: flex-end
       justify-content: flex-start
       text-align: left
+      &:hover
+        text-decoration: underline
 
     .chapter
       grid-area: chapter

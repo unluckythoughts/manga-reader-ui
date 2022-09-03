@@ -15,7 +15,7 @@ export const actions = {
     for (const i in resp.data.data) {
       const favorite = new Favorite(resp.data.data[i])
       favorite.manga.chapters = _.orderBy(favorite.manga.chapters,
-        (e: Chapter) => Number(e.number.replace(/^([0-9]+).*/g, "$1")), "desc")
+        (e: Chapter) => Number(e.number.replace(/^([0-9.]+).*/g, "$1")), "desc")
       favorites.push(favorite)
     }
     favorites = _.orderBy(favorites,
@@ -71,7 +71,7 @@ export const actions = {
     commit(MutationTypes.SET_LOADING, true)
 
     const url = rootState.apiBaseUrl + "/library"
-    await axios.patch(url, {}, { timeout: 20000 })
+    await axios.patch(url, {})
 
     dispatch(ActionTypes.GET_LIBRARY)
     commit(MutationTypes.SET_LOADING, false)
@@ -83,7 +83,7 @@ export const actions = {
     const resp = await axios.get(url)
     const favorite = new Favorite(resp.data.data)
     favorite.manga.chapters = _.orderBy(favorite.manga.chapters,
-      (e: Chapter) => Number(e.number.replace(/^([0-9]+).*/g, "$1")), "desc")
+      (e: Chapter) => Number(e.number.replace(/^([0-9.]+).*/g, "$1")), "desc")
 
     commit(MutationTypes.UPDATE_FAVORITE_CHAPTERS, favorite)
     commit(MutationTypes.SET_CURRENT_MANGA, favorite.manga)

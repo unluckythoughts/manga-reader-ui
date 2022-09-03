@@ -33,7 +33,7 @@
     v-for="(chapter, i) in this.manga().chapters",
     :class="{ completed: this.isRead(chapter) }"
   )
-    ChapterComponent(:index="i", :chapter="this.castToChapter(chapter)")
+    ChapterComponent(:index="i", :chapter="chapter")
 </template>
 
 <script lang="ts">
@@ -90,7 +90,7 @@ export default class MangaView extends Vue {
       this.store.state.inLibrary = true
     } else {
       if (this.manga().chapters.length <= 0) {
-        this.getUpdates()
+        this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_INFO, { url: this.$route.query.mangaUrl, force: false })
       }
     }
   }
@@ -121,7 +121,6 @@ export default class MangaView extends Vue {
 
   resume() {
     const favorite: Favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.store.state.currentManga.url)
-    console.log("$$$", favorite, this.store.state.currentManga.url)
     const index = _.findIndex(favorite.manga.chapters, c => parseFloat(c.number) === favorite.progress[0])
     this.store.dispatch(ActionTypes.GET_SOURCE_CHAPTER_INFO, index)
     if (favorite.progress[1] >= 0) {
@@ -131,10 +130,6 @@ export default class MangaView extends Vue {
         this.$router.push({ name: Routes.ReaderView, params: { id: index - 1 } })
       }
     }
-  }
-
-  castToChapter(obj?: any): Chapter {
-    return new Chapter(obj)
   }
 
   synopsis() {
