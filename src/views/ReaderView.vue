@@ -49,13 +49,21 @@ export default class ReaderView extends Vue {
     }
   }
 
+  updated() {
+    this.index = Number(this.$route.params.id || "0")
+    this.chapter = this.store.state.currentManga.chapters[this.index]
+    this.currentPage = 0
+  }
+
   mounted() {
     this.store.commit(MutationTypes.SET_READER_MODE, true)
 
     this.scrollTarget = document.getElementById("content") || new HTMLElement()
-    this.index = Number(this.$route.params.id || "0")
     this.favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.store.state.currentManga.url)
+
+    this.index = Number(this.$route.params.id || "0")
     this.chapter = this.store.state.currentManga.chapters[this.index]
+    this.currentPage = 0
 
     if (this.favorite) {
       this.scrollTarget?.addEventListener("scroll", this.scrolled)
@@ -104,7 +112,7 @@ export default class ReaderView extends Vue {
       if (rect.top < this.scrollTarget.clientHeight) {
         if (rect.height + rect.top > 0) {
           const chapterNumber = parseFloat(this.chapter.number)
-          if (i > this.currentPage || chapterNumber > this.favorite.progress[0]) {
+          if (i > this.currentPage && chapterNumber >= this.favorite.progress[0]) {
             this.currentPage = i
             let pageId = this.currentPage
             if (this.currentPage >= pages.length - 1) {
