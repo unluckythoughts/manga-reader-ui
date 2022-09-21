@@ -50,9 +50,10 @@ export default class ReaderView extends Vue {
   }
 
   updated() {
-    this.index = Number(this.$route.params.id || "0")
-    this.chapter = this.store.state.currentManga.chapters[this.index]
-    this.currentPage = 0
+    if (this.index !== Number(this.$route.params.id || "0")) {
+      this.index = Number(this.$route.params.id || "0")
+      this.chapter = this.store.state.currentManga.chapters[this.index]
+    }
   }
 
   mounted() {
@@ -95,6 +96,7 @@ export default class ReaderView extends Vue {
     const scroll = this.scrollTarget.scrollTop
     if (this.lastScroll < scroll) {
       this.scrollingUp = false
+      this.updateProgress()
     } else {
       this.scrollingUp = true
     }
@@ -102,31 +104,34 @@ export default class ReaderView extends Vue {
       this.scrollingUp = false
     }
     this.lastScroll = scroll
-    this.updateProgress()
   }
 
-  updateProgress() {
+  async updateProgress() {
     const pages = this.scrollTarget.querySelectorAll(".page img")
-    pages.forEach((el, i) => {
-      const rect = el.getBoundingClientRect()
-      if (rect.top < this.scrollTarget.clientHeight) {
-        if (rect.height + rect.top > 0) {
-          const chapterNumber = parseFloat(this.chapter.number)
-          if (i > this.currentPage && chapterNumber >= this.favorite.progress[0]) {
-            this.currentPage = i
+
+    for (const i in pages) {
+      const chapterNumber = parseFloat(this.chapter.number)
+      const progress = this.favorite.progress || [0, 0]
+      if (chapterNumber > progress[0] || (chapterNumber === progress[0] && progress[1] > 0 && parseInt(i) > progress[1] && parseInt(i) > this.currentPage)) {
+        const rect = pages[i].getBoundingClientRect()
+        if (rect.top < this.scrollTarget.clientHeight) {
+          if (rect.height + rect.top > 0) {
+            this.currentPage = parseInt(i)
             let pageId = this.currentPage
             if (this.currentPage >= pages.length - 1) {
               pageId = -1
             }
             this.store.dispatch(ActionTypes.UPDATE_FAVORITE_PROGRESS, {
               read: false,
+              favoriteId: this.favorite.id,
               index: this.index,
               pageId: pageId
             })
+            break
           }
         }
       }
-    })
+    }
   }
 
   goPrevious() {

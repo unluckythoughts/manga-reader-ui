@@ -64,7 +64,7 @@ export class Favorite {
   constructor(obj?: any) {
     this.id = obj?.id || 0
     this.manga = new Manga(obj?.manga)
-    this.progress = obj?.progress || ""
+    this.progress = obj?.progress || [0, 0]
     this.categories = obj?.categories || []
   }
 }

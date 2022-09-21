@@ -53,26 +53,26 @@ export const actions = {
       }
     }
   },
-  async [ActionTypes.UPDATE_FAVORITE_PROGRESS]({ state, rootState, commit }: ActionContext<LibraryState, State>, payload: { read: boolean, index: number, pageId: number }) {
-    const i = _.findIndex(state.favorites, el => el.manga.url === rootState.currentManga.url)
-    if (i >= 0) {
-      const favorite = state.favorites[i]
-
-      let pageId = payload.pageId
-      if (payload.read) {
-        if (payload.index > 0) {
-          payload.index = payload.index - 1
-        } else {
-          pageId = -1
-        }
-      }
-
-      const url = rootState.apiBaseUrl + "/library/" + favorite.id + "/chapter/" + favorite.manga.chapters[payload.index].number + "/progress/" + pageId
-
-      await axios.put(url)
-      const progress = [parseFloat(favorite.manga.chapters[payload.index].number), pageId]
-      commit(MutationTypes.UPDATE_FAVORITE_PROGRESS, { id: favorite.id, progress: progress })
+  async [ActionTypes.UPDATE_FAVORITE_PROGRESS]({ state, rootState, commit }: ActionContext<LibraryState, State>, payload: { read: boolean, favoriteId: number, index: number, pageId: number }) {
+    if (payload.favoriteId <= 0 || payload.favoriteId === undefined) {
+      const i = _.findIndex(state.favorites, el => el.manga.url === rootState.currentManga.url)
+      payload.favoriteId = state.favorites[i].id
     }
+
+    let pageId = payload.pageId
+    if (payload.read) {
+      if (payload.index > 0) {
+        payload.index = payload.index - 1
+      } else {
+        pageId = -1
+      }
+    }
+
+    const url = rootState.apiBaseUrl + "/library/" + payload.favoriteId + "/chapter/" + rootState.currentManga.chapters[payload.index].number + "/progress/" + pageId
+
+    await axios.put(url)
+    const progress = [parseFloat(rootState.currentManga.chapters[payload.index].number), pageId]
+    commit(MutationTypes.UPDATE_FAVORITE_PROGRESS, { id: payload.favoriteId, progress: progress })
   },
   async [ActionTypes.UPDATE_LIBRARY]({ commit, rootState, dispatch }: ActionContext<LibraryState, State>) {
     commit(MutationTypes.SET_LOADING, true)
