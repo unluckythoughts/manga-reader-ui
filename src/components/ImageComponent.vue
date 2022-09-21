@@ -30,7 +30,6 @@ export default class ImageComponent extends Vue {
   }
 
   loaded() {
-    console.log(this.src)
     this.done = true
   }
 

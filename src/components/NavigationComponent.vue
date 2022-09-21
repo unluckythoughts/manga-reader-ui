@@ -39,7 +39,6 @@ export default class ImageComponent extends Vue {
 
 <style lang="sass" scoped>
 .nav
-  padding: 5px
   background-color: #333
   max-width: 100px
 
@@ -52,11 +51,13 @@ export default class ImageComponent extends Vue {
     li
       list-style-type: none
       padding: 10px 0
+      &:has(a.router-link-active)
+        background-color: #42b983
 
-  a
-    font-weight: bold
-    color: darken(#42b983, 20%)
-    text-decoration: none
-    &.router-link-exact-active
-      color: #42b983
+      a
+        color: #42b983
+        font-weight: bold
+        text-decoration: none
+        &.router-link-active
+          color: #333
 </style>

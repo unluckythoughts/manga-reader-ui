@@ -22,7 +22,6 @@ export const actions = {
       }
       favorites = _.orderBy(favorites,
         (e: Favorite) => e.manga.title, "asc")
-
       commit(MutationTypes.SET_LIBRARY, favorites)
     } finally {
       commit(MutationTypes.SET_LOADING, false)
@@ -81,9 +80,9 @@ export const actions = {
     const url = rootState.apiBaseUrl + "/library"
     try {
       await axios.patch(url, {})
-      dispatch(ActionTypes.GET_LIBRARY)
     } finally {
       commit(MutationTypes.SET_LOADING, false)
+      dispatch(ActionTypes.GET_LIBRARY)
     }
   },
   async [ActionTypes.UPDATE_FAVORITE_INFO]({ commit, rootState }: ActionContext<LibraryState, State>, payload: number) {

@@ -5,7 +5,11 @@
 .info
   .manga-icon
     img.manga(@error="this.setAltImg", :src="this.manga.imageUrl")
-    img.source(@error="this.setAltImg", :src="this.manga.source.iconUrl")
+    img.source(
+      @error="this.setAltImg",
+      v-if="this.manga.source.iconUrl != ''",
+      :src="this.manga.source.iconUrl"
+    )
   .details
     h1.title(tabindex="0") {{ this.manga.title }}
     .synopsis

@@ -1,12 +1,11 @@
 <template lang="pug">
 .app(:class="{ reader: this.readingMode() }")
   NavigationComponent(v-if="!this.readingMode()")
-  .data
+  #content.content
     .loading(v-if="this.store.state.pageLoading")
       fa-icon.icon.fa-spin(icon="fa-redo")
-    #content.content
-      .router-view
-        router-view
+    .router-view
+      router-view
 </template>
 
 <script lang="ts">

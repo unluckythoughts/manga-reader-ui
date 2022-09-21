@@ -7,6 +7,7 @@
       loading="lazy"
     )
     img.source(
+      v-if="this.manga.source.iconUrl != ''",
       :src="this.manga.source.iconUrl",
       @error="this.setAltImg",
       loading="lazy"
