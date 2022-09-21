@@ -57,8 +57,8 @@ export default class PageComponent extends Vue {
 
   isRead(c: { index: number, favorite: Favorite }): boolean {
     const chapter = c.favorite.manga.chapters[c.index]
-    return (c.favorite.progress[0] > parseInt(chapter.number)) ||
-      (c.favorite.progress[0] === parseInt(chapter.number) && c.favorite.progress[1] === -1)
+    return (c.favorite.progress[0] > parseFloat(chapter.number)) ||
+      (c.favorite.progress[0] === parseFloat(chapter.number) && c.favorite.progress[1] === -1)
   }
 
   gotoReader(i: number, f: Favorite) {

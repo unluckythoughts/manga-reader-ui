@@ -84,7 +84,6 @@ export default class ReaderView extends Vue {
       this.scrollingUp = false
     }
     this.lastScroll = scroll
-    console.log("$$$", this.scrollingUp)
     this.updateProgress()
   }
 

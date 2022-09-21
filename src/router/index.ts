@@ -27,37 +27,37 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/library/updates/all",
     name: Routes.UpdatesView,
-    component: () => import(/* webpackChunkName: "mangaview" */ "../views/UpdatesView.vue")
+    component: () => import(/* webpackChunkName: "UpdatesView" */ "../views/UpdatesView.vue")
   },
   {
     path: "/library/:id",
     name: Routes.FavoriteView,
-    component: () => import(/* webpackChunkName: "mangaview" */ "../views/MangaView.vue")
+    component: () => import(/* webpackChunkName: "MangaView" */ "../views/MangaView.vue")
   },
   {
     path: "/sources",
     name: Routes.SourceListView,
-    component: () => import(/* webpackChunkName: "sourcelistview" */ "../views/SourceListView.vue")
+    component: () => import(/* webpackChunkName: "SourceListView" */ "../views/SourceListView.vue")
   },
   {
     path: "/sources/search",
     name: Routes.SearchView,
-    component: () => import(/* webpackChunkName: "mangaview" */ "../views/SearchView.vue")
+    component: () => import(/* webpackChunkName: "SearchView" */ "../views/SearchView.vue")
   },
   {
     path: "/source/mangas",
     name: Routes.SourceMangaListView,
-    component: () => import(/* webpackChunkName: "mangaview" */ "../views/MangaListView.vue")
+    component: () => import(/* webpackChunkName: "MangaListView" */  "../views/MangaListView.vue")
   },
   {
     path: "/source/manga",
     name: Routes.SourceMangaView,
-    component: () => import(/* webpackChunkName: "mangaview" */ "../views/MangaView.vue")
+    component: () => import(/* webpackChunkName: "MangaView" */  "../views/MangaView.vue")
   },
   {
     path: "/reader/:id",
     name: Routes.ReaderView,
-    component: () => import(/* webpackChunkName: "chapterview" */ "../views/ReaderView.vue")
+    component: () => import(/* webpackChunkName: "ReaderView" */  "../views/ReaderView.vue")
   }
 ]
 

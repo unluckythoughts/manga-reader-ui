@@ -96,8 +96,8 @@ export default class MangaView extends Vue {
   isRead(c: Chapter): boolean {
     if (this.store.state.inLibrary) {
       const favorite = this.store.getters[GetterTypes.GET_FAVORITE](this.$route.params.id)
-      return (favorite.progress[0] > parseInt(c.number)) ||
-        (favorite.progress[0] === parseInt(c.number) && favorite.progress[1] === -1)
+      return (favorite.progress[0] > parseFloat(c.number)) ||
+        (favorite.progress[0] === parseFloat(c.number) && favorite.progress[1] === -1)
     }
 
     return false

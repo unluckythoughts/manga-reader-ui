@@ -2,16 +2,16 @@
 .nav
   ul
     li
-      router-link(to="/library")
+      router-link(:to="{ name: 'LibraryView' }")
         fa-icon(icon="fa-home", size="xl")
     li
-      router-link(to="/library/updates/all")
+      router-link(:to="{ name: 'UpdatesView' }")
         fa-icon(icon="fa-redo", size="xl")
     li
-      router-link(to="/sources/search")
+      router-link(:to="{ name: 'SearchView' }")
         fa-icon(icon="fa-search", size="xl")
     li
-      router-link(to="/sources")
+      router-link(:to="{ name: 'SourceListView' }")
         fa-icon(icon="fa-globe", size="xl")
 </template>
 
