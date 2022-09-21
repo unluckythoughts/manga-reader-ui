@@ -40,7 +40,6 @@ export const mutations = {
     state.currentManga = new Manga()
   },
   [MutationTypes.SET_CHAPTER_PAGES](state: State, payload: { index: number, pages: string[] }) {
-    state.currentChapterIndex = payload.index
     state.currentManga.chapters[payload.index].imageUrls = payload.pages
   }
 }
