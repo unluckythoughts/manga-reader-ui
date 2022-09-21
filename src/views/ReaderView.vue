@@ -24,7 +24,7 @@ import { Routes } from "@/router"
 import { ActionTypes } from "@/store/actions"
 import { GetterTypes } from "@/store/getters"
 import { MutationTypes } from "@/store/mutations"
-import { Chapter, State } from "@/store/types"
+import { Chapter, Favorite, State } from "@/store/types"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 
@@ -38,6 +38,8 @@ export default class ReaderView extends Vue {
   scrollTarget !: HTMLElement
   lastScroll!: number
   scrollingUp = false
+  favorite !: Favorite
+  index !: number
   chapter !: Chapter
   currentPage = 0
 
@@ -51,7 +53,13 @@ export default class ReaderView extends Vue {
     this.store.commit(MutationTypes.SET_READER_MODE, true)
 
     this.scrollTarget = document.getElementById("content") || new HTMLElement()
-    this.scrollTarget?.addEventListener("scroll", this.scrolled)
+    this.index = Number(this.$route.params.id || "0")
+    this.favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.store.state.currentManga.url)
+    this.chapter = this.store.state.currentManga.chapters[this.index]
+
+    if (this.favorite) {
+      this.scrollTarget?.addEventListener("scroll", this.scrolled)
+    }
 
     const hash = this.$route.hash
     if (hash !== "") {
@@ -63,7 +71,9 @@ export default class ReaderView extends Vue {
   }
 
   beforeUnmount() {
-    this.scrollTarget?.removeEventListener("scroll", this.scrolled)
+    if (this.favorite) {
+      this.scrollTarget?.removeEventListener("scroll", this.scrolled)
+    }
 
     this.store.commit(MutationTypes.SET_READER_MODE, false)
   }
@@ -93,7 +103,8 @@ export default class ReaderView extends Vue {
       const rect = el.getBoundingClientRect()
       if (rect.top < this.scrollTarget.clientHeight) {
         if (rect.height + rect.top > 0) {
-          if (i > this.currentPage) {
+          const chapterNumber = parseFloat(this.chapter.number)
+          if (i > this.currentPage || chapterNumber > this.favorite.progress[0]) {
             this.currentPage = i
             let pageId = this.currentPage
             if (this.currentPage >= pages.length - 1) {
@@ -101,7 +112,7 @@ export default class ReaderView extends Vue {
             }
             this.store.dispatch(ActionTypes.UPDATE_FAVORITE_PROGRESS, {
               read: false,
-              index: Number(this.$route.params.id || "0"),
+              index: this.index,
               pageId: pageId
             })
           }

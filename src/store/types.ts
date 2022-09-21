@@ -95,7 +95,6 @@ export type State = {
   inLibrary: boolean
   apiBaseUrl: string
   currentManga: Manga
-  currentChapterIndex: number
   library?: LibraryState
   connector?: ConnectorState
 }

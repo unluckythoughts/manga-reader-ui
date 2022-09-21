@@ -9,7 +9,6 @@ export enum GetterTypes {
   GET_SOURCE_LIST = "GET_SOURCE_LIST",
   GET_SOURCE_MANGA_LIST = "GET_SOURCE_MANGA_LIST",
   GET_SEARCH_RESULT = "GET_SEARCH_RESULT",
-  GET_CHAPTER_INDEX = "GET_CHAPTER_INDEX",
   GET_PAGES = "GET_PAGES",
 }
 
@@ -18,8 +17,5 @@ export const getters = {
     return (id: number): string[] => {
       return state.currentManga.chapters[id].imageUrls
     }
-  },
-  [GetterTypes.GET_CHAPTER_INDEX](state: State): number {
-    return state.currentChapterIndex
   }
 }
