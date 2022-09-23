@@ -225,6 +225,14 @@ export default class MangaView extends Vue {
   display: grid
   grid-auto-flow: row
 
-.chapter.completed
-  color: grey
+.chapter
+  border-bottom: 1px solid #191919
+  &:hover
+    font-size: 1.2em
+    font-weight: 600
+    box-shadow: 0px 10px 5px #222
+  &.completed
+    color: grey
+  &:last-of-type
+    border-bottom: none
 </style>

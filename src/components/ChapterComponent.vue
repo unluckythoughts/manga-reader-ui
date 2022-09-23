@@ -67,11 +67,6 @@ export default class ChapterComponent extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="sass">
-.row:hover
-  font-size: 1.2em
-  font-weight: 600
-  box-shadow: 0px 10px 5px #222
-
 .info
   display: grid
   cursor: pointer
@@ -80,7 +75,6 @@ export default class ChapterComponent extends Vue {
   grid-auto-flow: column
   padding: 5px
   z-index: 10
-  border-top: 1px solid #292929
 
   .number
     text-align: left

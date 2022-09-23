@@ -112,7 +112,7 @@ export default class ReaderView extends Vue {
     for (const i in pages) {
       const chapterNumber = parseFloat(this.chapter.number)
       const progress = this.favorite.progress || [0, 0]
-      if (chapterNumber > progress[0] || (chapterNumber === progress[0] && progress[1] > 0 && parseInt(i) > progress[1] && parseInt(i) > this.currentPage)) {
+      if (chapterNumber > progress[0] || (chapterNumber === progress[0] && progress[1] >= 0 && parseInt(i) > progress[1] && parseInt(i) > this.currentPage)) {
         const rect = pages[i].getBoundingClientRect()
         if (rect.top < this.scrollTarget.clientHeight) {
           if (rect.height + rect.top > 0) {

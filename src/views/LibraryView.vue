@@ -33,7 +33,9 @@ export default class MangaListView extends Vue {
   }
 
   mounted() {
-    this.store.dispatch(ActionTypes.GET_LIBRARY)
+    if (this.store.getters[GetterTypes.GET_FAVORITES]?.length <= 0) {
+      this.store.dispatch(ActionTypes.GET_LIBRARY)
+    }
   }
 
   get mangaList(): Array<Manga> {

@@ -41,5 +41,4 @@ export default class MangaListComponent extends Vue {
   align-items: space-evenly
   justify-content: space-evenly
   justify-items: space-evenly
-  gap: 10px
 </style>
