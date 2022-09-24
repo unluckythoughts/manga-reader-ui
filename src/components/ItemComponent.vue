@@ -68,7 +68,7 @@ export default class ItemComponent extends Vue {
     if (favorite.id !== 0) {
       this.$router.push({ name: Routes.FavoriteView, params: { id: favorite.id } })
     } else {
-      this.$router.push({ name: Routes.SourceMangaView, query: { mangaUrl: this.manga.url } })
+      this.$router.push({ name: Routes.SourceItemView, query: { mangaUrl: this.manga.url } })
     }
   }
 }

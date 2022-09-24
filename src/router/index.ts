@@ -9,8 +9,8 @@ export enum Routes {
   FavoriteView = "FavoriteView",
   SearchView = "SearchView",
   SourceListView = "SourceListView",
-  SourceMangaListView = "SourceMangaListView",
-  SourceMangaView = "SourceMangaView",
+  SourceItemListView = "SourceItemListView",
+  SourceItemView = "SourceItemView",
   ReaderView = "ReaderView"
 }
 
@@ -32,7 +32,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/library/:id",
     name: Routes.FavoriteView,
-    component: () => import(/* webpackChunkName: "MangaView" */ "../views/MangaView.vue")
+    component: () => import(/* webpackChunkName: "ItemView" */ "../views/ItemView.vue")
   },
   {
     path: "/sources",
@@ -46,13 +46,13 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/source/mangas",
-    name: Routes.SourceMangaListView,
-    component: () => import(/* webpackChunkName: "MangaListView" */ "../views/MangaListView.vue")
+    name: Routes.SourceItemListView,
+    component: () => import(/* webpackChunkName: "ItemListView" */ "../views/ItemListView.vue")
   },
   {
     path: "/source/manga",
-    name: Routes.SourceMangaView,
-    component: () => import(/* webpackChunkName: "MangaView" */ "../views/MangaView.vue")
+    name: Routes.SourceItemView,
+    component: () => import(/* webpackChunkName: "ItemView" */ "../views/ItemView.vue")
   },
   {
     path: "/reader/:id",

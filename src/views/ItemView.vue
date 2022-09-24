@@ -134,7 +134,7 @@ export default class ItemView extends Vue {
       }, 500)
     } else {
       this.store.dispatch(ActionTypes.DEL_FAVORITE, this.$route.params.id)
-      this.$router.replace({ name: Routes.SourceMangaView, query: { mangaUrl: this.store.state.currentItem.url } })
+      this.$router.replace({ name: Routes.SourceItemView, query: { mangaUrl: this.store.state.currentItem.url } })
     }
   }
 
