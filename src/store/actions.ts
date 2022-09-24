@@ -30,7 +30,7 @@ export const actions = {
   async [ActionTypes.GET_SOURCE_CHAPTER_INFO]({ commit, state }: ActionContext<State, State>, payload: number) {
     commit(MutationTypes.SET_LOADING, true)
 
-    const url = state.apiBaseUrl + "/source/chapter"
+    const url = state.apiBaseUrl + "/manga/source/chapter"
     const resp = await axios.post(url, { chapterUrl: state.currentManga.chapters[payload].url })
 
     if (resp.data.data.config !== undefined && resp.data.data.config !== null) {
