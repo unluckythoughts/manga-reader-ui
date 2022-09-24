@@ -1,33 +1,33 @@
 import _ from "lodash"
 import { ConnectorState } from "."
 import { GetterTypes } from "../getters"
-import { Manga, SearchResult, Source } from "../types"
+import { Item, SearchResult, Source } from "../types"
 
 export const getters = {
-  [GetterTypes.GET_SOURCE_MANGA](state: ConnectorState): (domain: string, url: string) => Manga {
-    return (url: string): Manga => {
+  [GetterTypes.GET_SOURCE_MANGA](state: ConnectorState): (domain: string, url: string) => Item {
+    return (url: string): Item => {
       const j = _.findIndex(state.mangaList, el => el.url === url)
       if (j >= 0) {
         return state.mangaList[j]
       }
 
-      return new Manga()
+      return new Item()
     }
   },
   [GetterTypes.GET_SOURCE_LIST](state: ConnectorState): Array<Source> {
     return state.connectors
   },
-  [GetterTypes.GET_SOURCE_MANGA_LIST](state: ConnectorState): Manga[] {
+  [GetterTypes.GET_SOURCE_MANGA_LIST](state: ConnectorState): Item[] {
     return state.mangaList
   },
   [GetterTypes.GET_SEARCH_RESULT](state: ConnectorState): Array<SearchResult> {
-    const resultMap = new Map<string, Array<Manga>>()
+    const resultMap = new Map<string, Array<Item>>()
     if (state.mangaList?.length > 0) {
       state.mangaList.forEach((v) => {
         const sourceName = v.source.name
         let mangaList = resultMap.get(sourceName)
         if (mangaList === undefined) {
-          mangaList = new Array<Manga>()
+          mangaList = new Array<Item>()
         }
         mangaList.push(v)
 

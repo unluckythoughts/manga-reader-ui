@@ -1,29 +1,29 @@
 <template lang="pug">
 .manga-list
-  MangaComponent(v-for="manga in this.mangas", :manga="manga")
+  ItemComponent(v-for="manga in this.mangas", :manga="manga")
 </template>
 
 <script lang="ts">
-import { Manga, State } from "@/store/types"
+import { Item, State } from "@/store/types"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
-import MangaComponent from "@/components/MangaComponent.vue"
+import ItemComponent from "@/components/ItemComponent.vue"
 import { PropType } from "vue"
 
 @Options({
   props: {
     mangas: {
-      type: Object as PropType<Array<Manga>>,
+      type: Object as PropType<Array<Item>>,
       required: true
     }
   },
   components: {
-    MangaComponent
+    ItemComponent
   }
 })
-export default class MangaListComponent extends Vue {
+export default class ItemListComponent extends Vue {
   store!: Store<State>
-  mangas !: Array<Manga>
+  mangas !: Array<Item>
 
   data() {
     return {

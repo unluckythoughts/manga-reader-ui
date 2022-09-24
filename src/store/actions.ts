@@ -15,7 +15,13 @@ export enum ActionTypes {
   GET_SOURCE_MANGA_LIST = "GET_SOURCE_MANGA_LIST",
   GET_SOURCE_MANGA_INFO = "GET_SOURCE_MANGA_INFO",
   GET_SOURCE_CHAPTER_INFO = "GET_SOURCE_CHAPTER_INFO",
-  SEARCH_SOURCES = "SEARCH_SOURCES"
+  SEARCH_SOURCES = "SEARCH_SOURCES",
+
+  GET_NOVEL_SOURCE_LIST = "GET_NOVEL_SOURCE_LIST",
+  GET_SOURCE_NOVEL_LIST = "GET_SOURCE_NOVEL_LIST",
+  GET_SOURCE_NOVEL_INFO = "GET_SOURCE_NOVEL_INFO",
+  GET_SOURCE_NOVEL_CHAPTER_INFO = "GET_SOURCE_NOVEL_CHAPTER_INFO",
+  SEARCH_NOVEL_SOURCES = "SEARCH_NOVEL_SOURCES"
 }
 
 function setCookie(cname: string, cvalue: string, exdays: number) {
@@ -31,7 +37,7 @@ export const actions = {
     commit(MutationTypes.SET_LOADING, true)
 
     const url = state.apiBaseUrl + "/api/manga/source/chapter"
-    const resp = await axios.post(url, { chapterUrl: state.currentManga.chapters[payload].url })
+    const resp = await axios.post(url, { chapterUrl: state.currentItem.chapters[payload].url })
 
     if (resp.data.data.config !== undefined && resp.data.data.config !== null) {
       const { cookies } = resp.data.data.config
@@ -42,7 +48,7 @@ export const actions = {
       }
     }
 
-    commit(MutationTypes.SET_CHAPTER_PAGES, { index: payload, pages: resp.data.data.urls })
+    commit(MutationTypes.SET_CHAPTER_DATA, { index: payload, pages: resp.data.data.urls })
     commit(MutationTypes.SET_LOADING, false)
   }
 }

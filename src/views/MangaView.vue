@@ -56,7 +56,7 @@ import { Store, useStore } from "vuex"
     ChapterComponent
   }
 })
-export default class MangaView extends Vue {
+export default class ItemView extends Vue {
   store!: Store<State>
 
   data() {
@@ -66,24 +66,24 @@ export default class MangaView extends Vue {
   }
 
   get manga() {
-    let manga = this.store.state.currentManga
+    let manga = this.store.state.currentItem
     if (manga.url === "") {
       if (this.store.state.inLibrary) {
         const favorite = this.store.getters[GetterTypes.GET_FAVORITE](this.$route.params.id)
         if (favorite.id !== 0) {
-          this.store.commit(MutationTypes.SET_CURRENT_MANGA, favorite.manga)
+          this.store.commit(MutationTypes.SET_CURRENT_ITEM, favorite.manga)
         } else {
           this.store.dispatch(ActionTypes.GET_LIBRARY)
           const favorite = this.store.getters[GetterTypes.GET_FAVORITE](this.$route.params.id)
           if (favorite.id !== 0) {
-            this.store.commit(MutationTypes.SET_CURRENT_MANGA, favorite.manga)
+            this.store.commit(MutationTypes.SET_CURRENT_ITEM, favorite.manga)
           }
         }
       } else {
         const mangaUrl = this.$route.query.mangaUrl
         this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_INFO, { url: mangaUrl, force: false })
       }
-      manga = this.store.state.currentManga
+      manga = this.store.state.currentItem
     }
 
     return manga
@@ -124,22 +124,22 @@ export default class MangaView extends Vue {
 
   toggleFavorite() {
     if (!this.store.state.inLibrary) {
-      this.store.dispatch(ActionTypes.ADD_FAVORITE, this.store.state.currentManga.url)
+      this.store.dispatch(ActionTypes.ADD_FAVORITE, this.store.state.currentItem.url)
       setTimeout(() => {
-        const favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.store.state.currentManga.url)
+        const favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.store.state.currentItem.url)
         if (favorite !== undefined && favorite.id > 0) {
-          this.store.commit(MutationTypes.SET_CURRENT_MANGA, favorite.manga)
+          this.store.commit(MutationTypes.SET_CURRENT_ITEM, favorite.manga)
           this.$router.replace({ name: Routes.FavoriteView, params: { id: favorite.id } })
         }
       }, 500)
     } else {
       this.store.dispatch(ActionTypes.DEL_FAVORITE, this.$route.params.id)
-      this.$router.replace({ name: Routes.SourceMangaView, query: { mangaUrl: this.store.state.currentManga.url } })
+      this.$router.replace({ name: Routes.SourceMangaView, query: { mangaUrl: this.store.state.currentItem.url } })
     }
   }
 
   resume() {
-    const favorite: Favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.store.state.currentManga.url)
+    const favorite: Favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.store.state.currentItem.url)
     const index = _.findIndex(favorite.manga.chapters, c => parseFloat(c.number) === favorite.progress[0])
     this.store.dispatch(ActionTypes.GET_SOURCE_CHAPTER_INFO, index)
     if (favorite.progress[1] >= 0) {

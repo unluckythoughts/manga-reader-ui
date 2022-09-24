@@ -15,7 +15,7 @@ export enum GetterTypes {
 export const getters = {
   [GetterTypes.GET_PAGES](state: State): (id: number) => string[] {
     return (id: number): string[] => {
-      return state.currentManga.chapters[id].imageUrls
+      return state.currentItem.chapters[id].data
     }
   }
 }

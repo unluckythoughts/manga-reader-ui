@@ -5,14 +5,14 @@ import { connector } from "./connector"
 import { getters } from "./getters"
 import { library } from "./library"
 import { mutations } from "./mutations"
-import { Manga, State } from "./types"
+import { Item, State } from "./types"
 
 const state: State = {
   inReadingMode: false,
   pageLoading: false,
   inLibrary: true,
   apiBaseUrl: "http://localhost:5678",
-  currentManga: new Manga()
+  currentItem: new Item()
 }
 
 const vuexLocal = new VuexPersistence<State>({
@@ -20,7 +20,7 @@ const vuexLocal = new VuexPersistence<State>({
   storage: window.localStorage,
   reducer(state: State) {
     return {
-      currentManga: state.currentManga,
+      currentItem: state.currentItem,
       library: state.library,
       connector: state.connector
     }

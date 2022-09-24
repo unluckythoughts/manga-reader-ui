@@ -62,13 +62,13 @@ export default class PageComponent extends Vue {
   }
 
   gotoReader(i: number, f: Favorite) {
-    this.store.commit(MutationTypes.SET_CURRENT_MANGA, f.manga)
+    this.store.commit(MutationTypes.SET_CURRENT_ITEM, f.manga)
     this.store.dispatch(ActionTypes.GET_SOURCE_CHAPTER_INFO, i)
     this.$router.push({ name: Routes.ReaderView, params: { id: i } })
   }
 
   gotoManga(f: Favorite) {
-    this.store.commit(MutationTypes.SET_CURRENT_MANGA, f.manga)
+    this.store.commit(MutationTypes.SET_CURRENT_ITEM, f.manga)
     this.$router.push({ name: Routes.FavoriteView, params: { id: f.id } })
   }
 }

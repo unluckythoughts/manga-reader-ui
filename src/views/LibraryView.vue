@@ -1,25 +1,25 @@
 <template lang="pug">
-#refresh(v-if="!this.store.state.pageLoading", @click="this.updateMangaList()")
+#refresh(v-if="!this.store.state.pageLoading", @click="this.updateItemList()")
   fa-icon.icon(icon="fa-redo")
   span.title refresh
-MangaListComponent(:mangas="this.mangaList")
+ItemListComponent(:mangas="this.mangaList")
 </template>
 
 <script lang="ts">
-import MangaListComponent from "@/components/MangaListComponent.vue"
+import ItemListComponent from "@/components/ItemListComponent.vue"
 import { ActionTypes } from "@/store/actions"
 import { GetterTypes } from "@/store/getters"
-import { Manga, State } from "@/store/types"
+import { Item, State } from "@/store/types"
 import _ from "lodash"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 
 @Options({
   components: {
-    MangaListComponent
+    ItemListComponent
   }
 })
-export default class MangaListView extends Vue {
+export default class ItemListView extends Vue {
   store!: Store<State>
 
   data() {
@@ -28,7 +28,7 @@ export default class MangaListView extends Vue {
     }
   }
 
-  updateMangaList() {
+  updateItemList() {
     this.store.dispatch(ActionTypes.GET_LIBRARY)
   }
 
@@ -38,7 +38,7 @@ export default class MangaListView extends Vue {
     }
   }
 
-  get mangaList(): Array<Manga> {
+  get mangaList(): Array<Item> {
     const favorites = this.store.getters[GetterTypes.GET_FAVORITES]
     return _.map(favorites, f => f.manga)
   }

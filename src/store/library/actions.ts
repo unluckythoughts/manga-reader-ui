@@ -32,7 +32,7 @@ export const actions = {
 
     const url = rootState.apiBaseUrl + "/api/manga/library"
     try {
-      const resp = await axios.post(url, { mangaUrl: payload })
+      const resp = await axios.post(url, { url: payload })
       const favorite = new Favorite(resp.data.data)
       commit(MutationTypes.ADD_FAVORITE, favorite)
     } finally {
@@ -55,7 +55,7 @@ export const actions = {
   },
   async [ActionTypes.UPDATE_FAVORITE_PROGRESS]({ state, rootState, commit }: ActionContext<LibraryState, State>, payload: { read: boolean, favoriteId: number, index: number, pageId: number }) {
     if (payload.favoriteId <= 0 || payload.favoriteId === undefined) {
-      const i = _.findIndex(state.favorites, el => el.manga.url === rootState.currentManga.url)
+      const i = _.findIndex(state.favorites, el => el.manga.url === rootState.currentItem.url)
       payload.favoriteId = state.favorites[i].id
     }
 
@@ -68,10 +68,10 @@ export const actions = {
       }
     }
 
-    const url = rootState.apiBaseUrl + "/api/manga/library/" + payload.favoriteId + "/chapter/" + rootState.currentManga.chapters[payload.index].number + "/progress/" + pageId
+    const url = rootState.apiBaseUrl + "/api/manga/library/" + payload.favoriteId + "/chapter/" + rootState.currentItem.chapters[payload.index].number + "/progress/" + pageId
 
     await axios.put(url)
-    const progress = [parseFloat(rootState.currentManga.chapters[payload.index].number), pageId]
+    const progress = [parseFloat(rootState.currentItem.chapters[payload.index].number), pageId]
     commit(MutationTypes.UPDATE_FAVORITE_PROGRESS, { id: payload.favoriteId, progress: progress })
   },
   async [ActionTypes.UPDATE_LIBRARY]({ commit, rootState, dispatch }: ActionContext<LibraryState, State>) {
@@ -96,7 +96,7 @@ export const actions = {
         (e: Chapter) => Number(e.number.replace(/^([0-9.]+).*/g, "$1")), "desc")
 
       commit(MutationTypes.UPDATE_FAVORITE_CHAPTERS, favorite)
-      commit(MutationTypes.SET_CURRENT_MANGA, favorite.manga)
+      commit(MutationTypes.SET_CURRENT_ITEM, favorite.manga)
     } finally {
       commit(MutationTypes.SET_LOADING, false)
     }

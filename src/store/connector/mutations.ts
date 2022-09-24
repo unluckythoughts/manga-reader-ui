@@ -1,7 +1,7 @@
 import _ from "lodash"
 import { ConnectorState } from "."
 import { MutationTypes } from "../mutations"
-import { Manga, Source } from "../types"
+import { Item, Source } from "../types"
 
 export const mutations = {
   [MutationTypes.SET_SOURCE_LIST](state: ConnectorState, payload: Array<Source>) {
@@ -10,7 +10,7 @@ export const mutations = {
   [MutationTypes.CLEAR_SOURCE_LIST](state: ConnectorState) {
     state.connectors = new Array<Source>()
   },
-  [MutationTypes.SET_SOURCE_MANGA_LIST](state: ConnectorState, payload: Array<Manga>) {
+  [MutationTypes.SET_SOURCE_MANGA_LIST](state: ConnectorState, payload: Array<Item>) {
     state.mangaList = payload
   },
   [MutationTypes.CLEAR_SOURCE_MANGA_LIST](state: ConnectorState, payload: string) {
@@ -19,7 +19,7 @@ export const mutations = {
       state.connectors.splice(i, 1)
     }
   },
-  [MutationTypes.SET_SOURCE_MANGA_INFO](state: ConnectorState, payload: Manga) {
+  [MutationTypes.SET_SOURCE_MANGA_INFO](state: ConnectorState, payload: Item) {
     const j = _.findIndex(state.mangaList, el => el.url === payload.url)
     if (j >= 0) {
       state.mangaList[j] = payload

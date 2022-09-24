@@ -11,11 +11,11 @@
 .results
   .result(v-for="result in this.results")
     h2.header {{ result.sourceName }}
-    MangaListComponent(:mangas="result.mangaList")
+    ItemListComponent(:mangas="result.mangaList")
 </template>
 
 <script lang="ts">
-import MangaListComponent from "@/components/MangaListComponent.vue"
+import ItemListComponent from "@/components/ItemListComponent.vue"
 import { ActionTypes } from "@/store/actions"
 import { GetterTypes } from "@/store/getters"
 import { SearchResult, State } from "@/store/types"
@@ -24,10 +24,10 @@ import { Store, useStore } from "vuex"
 
 @Options({
   components: {
-    MangaListComponent
+    ItemListComponent
   }
 })
-export default class MangaListView extends Vue {
+export default class ItemListView extends Vue {
   store!: Store<State>
   query = ""
 

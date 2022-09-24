@@ -52,7 +52,7 @@ export default class ReaderView extends Vue {
   updated() {
     if (this.index !== Number(this.$route.params.id || "0")) {
       this.index = Number(this.$route.params.id || "0")
-      this.chapter = this.store.state.currentManga.chapters[this.index]
+      this.chapter = this.store.state.currentItem.chapters[this.index]
     }
   }
 
@@ -60,10 +60,10 @@ export default class ReaderView extends Vue {
     this.store.commit(MutationTypes.SET_READER_MODE, true)
 
     this.scrollTarget = document.getElementById("content") || new HTMLElement()
-    this.favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.store.state.currentManga.url)
+    this.favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.store.state.currentItem.url)
 
     this.index = Number(this.$route.params.id || "0")
-    this.chapter = this.store.state.currentManga.chapters[this.index]
+    this.chapter = this.store.state.currentItem.chapters[this.index]
     this.currentPage = 0
 
     if (this.favorite) {
@@ -135,7 +135,7 @@ export default class ReaderView extends Vue {
   }
 
   goPrevious() {
-    if (Number(this.$route.params.id || "0") < this.store.state.currentManga.chapters.length) {
+    if (Number(this.$route.params.id || "0") < this.store.state.currentItem.chapters.length) {
       const i = Number(this.$route.params.id || "0")
       this.store.dispatch(ActionTypes.GET_SOURCE_CHAPTER_INFO, i + 1)
       this.$router.replace({ name: Routes.ReaderView, params: { id: i + 1 } })

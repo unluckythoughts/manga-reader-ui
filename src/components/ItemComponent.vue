@@ -21,18 +21,18 @@
 import { Routes } from "@/router"
 import { GetterTypes } from "@/store/getters"
 import { MutationTypes } from "@/store/mutations"
-import { Manga, State } from "@/store/types"
+import { Item, State } from "@/store/types"
 import { getSourceIcon, setAltImg } from "@/utils/utils"
 import { Options, Vue } from "vue-class-component"
 import { Store, useStore } from "vuex"
 
 @Options({
   props: {
-    manga: Manga
+    manga: Item
   }
 })
-export default class MangaComponent extends Vue {
-  manga!: Manga
+export default class ItemComponent extends Vue {
+  manga!: Item
   store!: Store<State>
 
   data() {
@@ -63,7 +63,7 @@ export default class MangaComponent extends Vue {
   }
 
   goto() {
-    this.store.commit(MutationTypes.SET_CURRENT_MANGA, this.manga)
+    this.store.commit(MutationTypes.SET_CURRENT_ITEM, this.manga)
     const favorite = this.store.getters[GetterTypes.GET_FAVORITE_BY_URL](this.manga.url)
     if (favorite.id !== 0) {
       this.$router.push({ name: Routes.FavoriteView, params: { id: favorite.id } })

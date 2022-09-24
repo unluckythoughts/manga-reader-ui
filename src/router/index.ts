@@ -47,17 +47,17 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/source/mangas",
     name: Routes.SourceMangaListView,
-    component: () => import(/* webpackChunkName: "MangaListView" */  "../views/MangaListView.vue")
+    component: () => import(/* webpackChunkName: "MangaListView" */ "../views/MangaListView.vue")
   },
   {
     path: "/source/manga",
     name: Routes.SourceMangaView,
-    component: () => import(/* webpackChunkName: "MangaView" */  "../views/MangaView.vue")
+    component: () => import(/* webpackChunkName: "MangaView" */ "../views/MangaView.vue")
   },
   {
     path: "/reader/:id",
     name: Routes.ReaderView,
-    component: () => import(/* webpackChunkName: "ReaderView" */  "../views/ReaderView.vue")
+    component: () => import(/* webpackChunkName: "ReaderView" */ "../views/ReaderView.vue")
   }
 ]
 

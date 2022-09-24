@@ -19,7 +19,7 @@ export class Chapter {
   title: string
   number: string
   uploadDate: string
-  imageUrls: Array<string>
+  data: Array<string>
 
   constructor(obj?: any) {
     this.id = obj?.id || 0
@@ -27,11 +27,11 @@ export class Chapter {
     this.title = obj?.title || ""
     this.number = obj?.number || ""
     this.uploadDate = obj?.uploadDate || ""
-    this.imageUrls = obj?.imageUrls || []
+    this.data = obj?.data || []
   }
 }
 
-export class Manga {
+export class Item {
   id: number
   url: string
   title: string
@@ -57,13 +57,13 @@ export class Manga {
 
 export class Favorite {
   id: number
-  manga: Manga
+  manga: Item
   progress: number[]
   categories: string[]
 
   constructor(obj?: any) {
     this.id = obj?.id || 0
-    this.manga = new Manga(obj?.manga)
+    this.manga = new Item(obj?.manga)
     this.progress = obj?.progress || [0, 0]
     this.categories = obj?.categories || []
   }
@@ -81,11 +81,11 @@ export class DayUpdate {
 
 export class SearchResult {
   sourceName: string
-  mangaList: Array<Manga>
+  mangaList: Array<Item>
 
   constructor(obj?: any) {
     this.sourceName = obj?.sourceName || ""
-    this.mangaList = obj?.mangaList || Array<Manga>()
+    this.mangaList = obj?.mangaList || Array<Item>()
   }
 }
 
@@ -94,7 +94,7 @@ export type State = {
   pageLoading: boolean
   inLibrary: boolean
   apiBaseUrl: string
-  currentManga: Manga
+  currentItem: Item
   library?: LibraryState
   connector?: ConnectorState
 }
