@@ -10,7 +10,7 @@ export const actions = {
   async [ActionTypes.GET_LIBRARY]({ commit, rootState }: ActionContext<LibraryState, State>) {
     commit(MutationTypes.SET_LOADING, true)
 
-    const url = rootState.apiBaseUrl + "/manga/library"
+    const url = rootState.apiBaseUrl + "/api/manga/library"
     try {
       const resp = await axios.get(url)
       let favorites = new Array<Favorite>()
@@ -30,7 +30,7 @@ export const actions = {
   async [ActionTypes.ADD_FAVORITE]({ rootState, commit }: ActionContext<LibraryState, State>, payload: string) {
     commit(MutationTypes.SET_LOADING, true)
 
-    const url = rootState.apiBaseUrl + "/manga/library"
+    const url = rootState.apiBaseUrl + "/api/manga/library"
     try {
       const resp = await axios.post(url, { mangaUrl: payload })
       const favorite = new Favorite(resp.data.data)
@@ -44,7 +44,7 @@ export const actions = {
     if (i >= 0) {
       commit(MutationTypes.SET_LOADING, true)
 
-      const url = rootState.apiBaseUrl + "/manga/library/" + payload + "/remove"
+      const url = rootState.apiBaseUrl + "/api/manga/library/" + payload + "/remove"
       try {
         await axios.delete(url)
         commit(MutationTypes.DEL_FAVORITE, i)
@@ -68,7 +68,7 @@ export const actions = {
       }
     }
 
-    const url = rootState.apiBaseUrl + "/manga/library/" + payload.favoriteId + "/chapter/" + rootState.currentManga.chapters[payload.index].number + "/progress/" + pageId
+    const url = rootState.apiBaseUrl + "/api/manga/library/" + payload.favoriteId + "/chapter/" + rootState.currentManga.chapters[payload.index].number + "/progress/" + pageId
 
     await axios.put(url)
     const progress = [parseFloat(rootState.currentManga.chapters[payload.index].number), pageId]
@@ -77,7 +77,7 @@ export const actions = {
   async [ActionTypes.UPDATE_LIBRARY]({ commit, rootState, dispatch }: ActionContext<LibraryState, State>) {
     commit(MutationTypes.SET_LOADING, true)
 
-    const url = rootState.apiBaseUrl + "/manga/library"
+    const url = rootState.apiBaseUrl + "/api/manga/library"
     try {
       await axios.patch(url, {})
     } finally {
@@ -88,7 +88,7 @@ export const actions = {
   async [ActionTypes.UPDATE_FAVORITE_INFO]({ commit, rootState }: ActionContext<LibraryState, State>, payload: number) {
     commit(MutationTypes.SET_LOADING, true)
 
-    const url = rootState.apiBaseUrl + "/manga/library/" + payload + "/update"
+    const url = rootState.apiBaseUrl + "/api/manga/library/" + payload + "/update"
     try {
       const resp = await axios.get(url)
       const favorite = new Favorite(resp.data.data)

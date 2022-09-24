@@ -11,7 +11,7 @@ export const actions = {
     commit(MutationTypes.CLEAR_SOURCE_MANGA_LIST)
     commit(MutationTypes.SET_LOADING, true)
 
-    const url = rootState.apiBaseUrl + "/manga/source"
+    const url = rootState.apiBaseUrl + "/api/manga/source"
     try {
       const resp = await axios.post(url, { domain: payload.domain, force: payload.force })
       let mangaList = new Array<Manga>()
@@ -27,7 +27,7 @@ export const actions = {
   async [ActionTypes.GET_SOURCE_MANGA_INFO]({ commit, rootState }: ActionContext<ConnectorState, State>, payload: { url: string, force: boolean }) {
     commit(MutationTypes.SET_LOADING, true)
 
-    const url = rootState.apiBaseUrl + "/manga/source/manga"
+    const url = rootState.apiBaseUrl + "/api/manga/source/manga"
     try {
       const resp = await axios.post(url, { mangaUrl: payload.url, force: payload.force })
       const manga = new Manga(resp.data.data)
@@ -44,7 +44,7 @@ export const actions = {
     commit(MutationTypes.CLEAR_SOURCE_LIST)
     commit(MutationTypes.SET_LOADING, true)
 
-    const url = rootState.apiBaseUrl + "/manga/source"
+    const url = rootState.apiBaseUrl + "/api/manga/source"
     try {
       const resp = await axios.get(url)
       const sourceList = new Array<Source>()
@@ -60,7 +60,7 @@ export const actions = {
     commit(MutationTypes.SET_LOADING, true)
     commit(MutationTypes.CLEAR_SOURCE_MANGA_LIST)
 
-    const url = rootState.apiBaseUrl + "/manga/source/search"
+    const url = rootState.apiBaseUrl + "/api/manga/source/search"
     try {
       const resp = await axios.post(url, { query: payload })
       const mangas = new Array<Manga>()

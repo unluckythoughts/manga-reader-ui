@@ -11,7 +11,7 @@ const state: State = {
   inReadingMode: false,
   pageLoading: false,
   inLibrary: true,
-  apiBaseUrl: "http://localhost:5678/api",
+  apiBaseUrl: "http://localhost:5678",
   currentManga: new Manga()
 }
 
