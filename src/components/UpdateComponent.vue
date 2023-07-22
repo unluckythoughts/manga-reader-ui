@@ -80,8 +80,9 @@ function gotoManga(e: MouseEvent) {
   transition: transform .1s
 
   &:hover
-    transform: scale(1.2)
-    box-shadow: 15px 10px 20px 20px rgba(0, 0, 0, .95)
+    background-color: #333333 !important
+    // transform: scale(1.2)
+    // box-shadow: 15px 10px 20px 20px rgba(0, 0, 0, .95)
 
   img
     height: 100px

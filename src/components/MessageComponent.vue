@@ -43,8 +43,7 @@ const error = computed(() => {
     cursor: pointer
 
     &:hover
-      margin-top: -15px
-      font-size: 30px
+      transform: scale(1.4)
 
   &.error
     border-color: lighten(red,10)
