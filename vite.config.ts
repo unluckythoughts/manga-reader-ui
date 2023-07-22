@@ -19,7 +19,18 @@ export default defineConfig(({ command, mode }) => {
       }
     },
     build: {
-      outDir: env.UI_OUT_DIR || "dist"
+      outDir: env.UI_OUT_DIR || "dist",
+      rollupOptions: {
+        output: {
+          assetFileNames: ({ name }) => {
+            if (/\.(gif|jpe?g|png|svg)$/.test(name ?? '')) {
+              return 'assets/images/[name]-[hash][extname]';
+            }
+
+            return "assets/[name]-[hash][extname]"
+          }
+        }
+      }
     }
   }
 })
