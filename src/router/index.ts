@@ -3,13 +3,13 @@ import LibraryView from "../views/LibraryView.vue"
 import { nextTick } from "vue"
 
 export enum Routes {
-  LibraryView     = "LibraryView",
-  UpdatesView     = "UpdatesView",
-  SearchView      = "SearchView",
-  ItemView        = "ItemView",
-  SourceView      = "SourceView",
-  ReaderView      = "ReaderView",
-  SourceListView  = "SourceListView"
+  LibraryView = "LibraryView",
+  UpdatesView = "UpdatesView",
+  SearchView = "SearchView",
+  ItemView = "ItemView",
+  SourceView = "SourceView",
+  ReaderView = "ReaderView",
+  SourceListView = "SourceListView"
 }
 
 const router = createRouter({

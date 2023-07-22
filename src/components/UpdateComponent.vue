@@ -34,13 +34,13 @@ function gotoReader() {
   let chapter = props.fav.manga.chapters[props.index]
   store.setCurrentItemByID(mangaID)
   store.setCurrentChapterByID(chapter.id)
-  router.push({ name: Routes.ReaderView, params: { id: chapter.id }})
+  router.push({ name: Routes.ReaderView, params: { id: chapter.id } })
 }
 
 function gotoManga() {
   let mangaID = props.fav.manga.id
   store.setCurrentItemByID(mangaID)
-  router.push({ name: Routes.ItemView, params: { id: mangaID }})
+  router.push({ name: Routes.ItemView, params: { id: mangaID } })
 }
 
 </script>

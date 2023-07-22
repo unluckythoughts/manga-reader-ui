@@ -13,14 +13,14 @@ import { computed, onMounted, onUpdated } from "vue";
 
 const store = useSourceStore()
 const sources = computed(() => {
-  if (store.sources.length === 0)  {
+  if (store.sources.length === 0) {
     store.getSources()
   }
 
   return store.sources
 })
 
-onUpdated(()=>{
+onUpdated(() => {
   document.title = "Sources"
 })
 

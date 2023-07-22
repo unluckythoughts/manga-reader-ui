@@ -23,7 +23,7 @@
 import router, { Routes } from "@/router"
 import { useMangaStore, type Item } from "@/stores/manga"
 import { proxyBaseURL, useSourceStore } from "@/stores/source"
-import { proxyImage, resolveImage, getSourceIcon} from "@/utils"
+import { proxyImage, resolveImage, getSourceIcon } from "@/utils"
 import { computed, ref, type Ref } from "vue"
 import ContextMenuComponent from "./ContextMenuComponent.vue"
 import { useLibraryStore } from "@/stores/library"
@@ -49,8 +49,8 @@ function toggleFavourite(e: MouseEvent) {
   menu.value.close()
 }
 
-const isFavorite = computed((): boolean =>{
-  if(route.name === Routes.SearchView) {
+const isFavorite = computed((): boolean => {
+  if (route.name === Routes.SearchView) {
     return libraryStore.isFavourite(props.manga.id)
   }
   return false
@@ -64,7 +64,7 @@ function options(e: MouseEvent) {
 
 function goto() {
   store.setCurrentItemByID(props.manga.id)
-  router.push({name: Routes.ItemView, params: {id: props.manga.id}})
+  router.push({ name: Routes.ItemView, params: { id: props.manga.id } })
 }
 </script>
 

@@ -18,7 +18,7 @@ export class Favorite {
     this.progress = obj?.progress || [0, 0]
     this.categories = obj?.categories || []
 
-    this.manga?.chapters.sort((a,b) => {
+    this.manga?.chapters.sort((a, b) => {
       if (parseFloat(a.number) > parseFloat(b.number)) return -1
       return 1
     })
@@ -44,7 +44,7 @@ export const useLibraryStore = defineStore('library', () => {
         favs.push(new Favorite(resp.data.data[i]))
       }
       setLibrary(favs)
-    } catch(e) {
+    } catch (e) {
       if (e instanceof Error) state.setError(e)
       else console.error(e)
     } finally {
@@ -57,8 +57,8 @@ export const useLibraryStore = defineStore('library', () => {
     try {
       state.setLoading(true)
       const resp = await axios.post(url, { id: mangaID })
-      library.push(new Favorite(resp.data.data))      
-    } catch(e) {
+      library.push(new Favorite(resp.data.data))
+    } catch (e) {
       if (e instanceof Error) state.setError(e)
       else console.error(e)
     } finally {
@@ -77,21 +77,21 @@ export const useLibraryStore = defineStore('library', () => {
       state.setLoading(true)
       await axios.delete(url)
       delete library[library.findIndex(v => v.id === library[favIndex].id)]
-    } catch(e) {
+    } catch (e) {
       if (e instanceof Error) state.setError(e)
       else console.error(e)
     } finally {
       state.setLoading(false)
     }
   }
-  
+
   async function updateLibrary() {
     const url = apiBaseURL + "/manga/library"
     try {
       state.setLoading(true)
       await axios.patch(url, {})
       await getLibrary()
-    } catch(e) {
+    } catch (e) {
       state.setError(e)
     } finally {
       state.setLoading(false)
@@ -121,19 +121,19 @@ export const useLibraryStore = defineStore('library', () => {
       const url = apiBaseURL + "/manga/library/" + library[favIndex]?.id + "/chapter/" + chapterNum + "/progress/" + pageId
       await axios.put(url)
       library[favIndex].progress = [parseFloat(chapterNum), pageId]
-    } catch(e) {
+    } catch (e) {
       state.setError(e)
     } finally {
       state.setLoading(false)
     }
   }
 
-  function isFavourite(mangaID: number) : boolean{
+  function isFavourite(mangaID: number): boolean {
     return library.findIndex(v => v?.manga.id === mangaID) >= 0
   }
 
   function getFavouriteProgress(mangaID: number): number[] {
-    let favIndex = library.findIndex(v => v?.manga.id === mangaID) 
+    let favIndex = library.findIndex(v => v?.manga.id === mangaID)
     if (favIndex < 0) {
       return [0, 0]
     }
@@ -141,8 +141,8 @@ export const useLibraryStore = defineStore('library', () => {
     return library[favIndex].progress
   }
 
-  function getDailyUpdates(): Array<{date: string, updates: Array<{fav: Favorite, i: number}>}> {
-    let updateMap = new Map<string, Array<{fav: Favorite, i: number}>>()
+  function getDailyUpdates(): Array<{ date: string, updates: Array<{ fav: Favorite, i: number }> }> {
+    let updateMap = new Map<string, Array<{ fav: Favorite, i: number }>>()
     let dates = new Array<string>()
 
     for (let i = 0; i < library.length; i++) {
@@ -152,20 +152,20 @@ export const useLibraryStore = defineStore('library', () => {
         if (moment(chapter.uploadDate, "YYYY-MM-DD").diff(moment(), "month") < 0) {
           continue
         }
-        
+
         if (updateMap.get(chapter.uploadDate) === undefined) {
-          updateMap.set(chapter.uploadDate, new Array<{fav: Favorite, i: number}>())
+          updateMap.set(chapter.uploadDate, new Array<{ fav: Favorite, i: number }>())
           dates.push(chapter.uploadDate)
         }
 
-        updateMap.get(chapter.uploadDate)?.push({fav: fav, i: j})
+        updateMap.get(chapter.uploadDate)?.push({ fav: fav, i: j })
       }
     }
 
     dates.sort().reverse()
-    let updates = new Array<{date: string, updates: Array<{fav: Favorite, i: number}>}>
+    let updates = new Array<{ date: string, updates: Array<{ fav: Favorite, i: number }> }>
     for (const i in dates) {
-      updates.push({date: dates[i], updates: updateMap.get(dates[i])||new Array()})
+      updates.push({ date: dates[i], updates: updateMap.get(dates[i]) || new Array() })
     }
 
     return updates

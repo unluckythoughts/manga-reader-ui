@@ -22,7 +22,7 @@ function getUpdates() {
   store.updateLibrary()
 }
 
-onUpdated(()=>{
+onUpdated(() => {
   document.title = "Updates"
 })
 

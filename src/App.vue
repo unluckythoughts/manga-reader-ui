@@ -1,7 +1,7 @@
 <template lang="pug">
 #app-content(:class="{'reader': route.name == Routes.ReaderView}")
   NavigationComponent(v-show="route.name != Routes.ReaderView")
-  #content.content(tabindex=0, @scroll="shortcuts", @wheel="shortcuts", @keyup="shortcuts")
+  #content.content(tabindex=0, @scroll.passive="shortcuts", @wheel.passive="shortcuts", @keyup="shortcuts")
     .loading(v-if="state.isLoading()")
       fa-icon.icon.fa-spin(icon="fa-redo")
     MessageComponent

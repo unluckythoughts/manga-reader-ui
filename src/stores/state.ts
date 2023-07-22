@@ -28,7 +28,7 @@ export const useStateStore = defineStore('state', () => {
         name: "Axios Error",
         message: "Request to " + e.request.responseURL + " failed with status code " + e.response?.status
       }
-    } else if (e instanceof Error ) {
+    } else if (e instanceof Error) {
       error.value = e
     } else {
       error.value = new Error(e)

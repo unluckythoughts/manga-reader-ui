@@ -24,18 +24,18 @@ export const proxyBaseURL = hostBaseURL + "/_proxy/"
 
 export const useSourceStore = defineStore('source', () => {
   const sources = new Array<Source>()
-  const searchResult = reactive(new Map<string,Array<Item>>())
+  const searchResult = reactive(new Map<string, Array<Item>>())
   const state = useStateStore()
 
   const getSources = async () => {
-    const sourceURL = apiBaseURL+"/manga/source"
+    const sourceURL = apiBaseURL + "/manga/source"
     try {
       state.setLoading(true)
       const resp = await axios.get(sourceURL)
       for (const i in resp.data.data) {
         sources.push(new Source(resp.data.data[i]))
       }
-    } catch(e) {
+    } catch (e) {
       state.setError(e)
     } finally {
       state.setLoading(false)
@@ -43,14 +43,14 @@ export const useSourceStore = defineStore('source', () => {
   }
 
   const updateSource = async (id: number) => {
-    const sourceURL = apiBaseURL+"/manga/source"
+    const sourceURL = apiBaseURL + "/manga/source"
     try {
       state.setLoading(true)
-      const resp = await axios.post(sourceURL, {id: id, force: true})
+      const resp = await axios.post(sourceURL, { id: id, force: true })
       for (const i in resp.data.data) {
         sources.push(new Source(resp.data.data[i]))
       }
-    } catch(e) {
+    } catch (e) {
       state.setError(e)
     } finally {
       state.setLoading(false)
@@ -58,19 +58,19 @@ export const useSourceStore = defineStore('source', () => {
   }
 
   const updateAllSources = async () => {
-    const sourceURL = apiBaseURL+"/manga/source"
+    const sourceURL = apiBaseURL + "/manga/source"
     try {
       state.setLoading(true)
       await axios.patch(sourceURL)
-    } catch(e) {
+    } catch (e) {
       state.setError(e)
     } finally {
       state.setLoading(false)
     }
   }
 
-  const searchSources = async(payload: string) => {
-    const searchURL = apiBaseURL+ "/manga/source/search"
+  const searchSources = async (payload: string) => {
+    const searchURL = apiBaseURL + "/manga/source/search"
     try {
       state.setLoading(true)
       const resp = await axios.post(searchURL, { query: payload })
@@ -83,7 +83,7 @@ export const useSourceStore = defineStore('source', () => {
           searchResult.set(manga.source.name, new Array<Item>(manga))
         }
       }
-    } catch(e) {
+    } catch (e) {
       state.setError(e)
     } finally {
       state.setLoading(false)

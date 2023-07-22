@@ -13,7 +13,7 @@
 import moment from "moment"
 import { ref } from "vue"
 import { Chapter, useMangaStore } from "@/stores/manga"
-import ContextMenuComponent from "@/components/ContextMenuComponent.vue" 
+import ContextMenuComponent from "@/components/ContextMenuComponent.vue"
 import router, { Routes } from "@/router"
 
 const props = defineProps<{

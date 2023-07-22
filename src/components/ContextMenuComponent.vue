@@ -44,7 +44,7 @@ const open = (evt: MouseEvent) => {
   })
 }
 
-defineExpose({open, close})
+defineExpose({ open, close })
 </script>
 
 <style lang="sass">

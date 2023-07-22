@@ -14,7 +14,7 @@ import { onUpdated } from 'vue';
 
 const store = useLibraryStore()
 
-onUpdated(()=>{
+onUpdated(() => {
   document.title = "Library"
 })
 </script>

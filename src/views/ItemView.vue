@@ -37,8 +37,8 @@ RefreshComponent(@click="getUpdates()", :msg="'update'")
 </template>
 
 <script setup lang="ts">
-import RefreshComponent from "@/components/RefreshComponent.vue" 
-import ChapterComponent from "@/components/ChapterComponent.vue" 
+import RefreshComponent from "@/components/RefreshComponent.vue"
+import ChapterComponent from "@/components/ChapterComponent.vue"
 import { proxyImage } from "@/utils"
 import { useMangaStore } from "@/stores/manga"
 import { useRoute } from "vue-router"
