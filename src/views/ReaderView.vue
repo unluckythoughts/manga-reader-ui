@@ -7,6 +7,7 @@
       @load="loadImage(i)",
       :class="{'done': imageLoads[i]}"
     )
+.blank(style="min-height: 20px")
 </template>
   
 <script setup lang="ts">
@@ -32,7 +33,7 @@ let imageUrls = computed(() => {
 function imageInViewport(e: Element): Boolean {
   const rect = e.getBoundingClientRect()
   let inViewPort = (
-    rect.top <= 0 && rect.bottom > 0
+    (rect.top <= 0 || rect.bottom <= (window.innerHeight || scrollTarget.clientHeight)) && rect.bottom > 0
   )
 
   return inViewPort
@@ -95,6 +96,7 @@ function scrolled(e: Event) {
     display: grid
     grid-auto-flow: row
     gap: 0px
+    margin: 0px -7px
   
     .page
       width: 100%
