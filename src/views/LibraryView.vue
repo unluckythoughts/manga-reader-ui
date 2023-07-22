@@ -1,46 +1,29 @@
 <template lang="pug">
-#refresh(v-if="!this.store.state.pageLoading", @click="this.updateItemList()")
-  fa-icon.icon(icon="fa-redo")
-  span.title refresh
-ItemListComponent(:mangas="this.mangaList")
+main
+  RefreshComponent(@click="store.getLibrary()", :msg="'refresh'")
+  h1 Favourites
+  .manga-list
+    ItemComponent(v-for="fav in store.library", :manga="fav.manga")
 </template>
 
-<script lang="ts">
-import ItemListComponent from "@/components/ItemListComponent.vue"
-import { ActionTypes } from "@/store/actions"
-import { GetterTypes } from "@/store/getters"
-import { Item, State } from "@/store/types"
-import _ from "lodash"
-import { Options, Vue } from "vue-class-component"
-import { Store, useStore } from "vuex"
+<script setup lang="ts">
+import { useLibraryStore } from '@/stores/library';
+import RefreshComponent from '@/components/RefreshComponent.vue'
+import ItemComponent from '@/components/ItemComponent.vue'
+import { onUpdated } from 'vue';
 
-@Options({
-  components: {
-    ItemListComponent
-  }
+const store = useLibraryStore()
+
+onUpdated(()=>{
+  document.title = "Library"
 })
-export default class ItemListView extends Vue {
-  store!: Store<State>
-
-  data() {
-    return {
-      store: useStore()
-    }
-  }
-
-  updateItemList() {
-    this.store.dispatch(ActionTypes.GET_LIBRARY)
-  }
-
-  mounted() {
-    if (this.store.getters[GetterTypes.GET_FAVORITES]?.length <= 0) {
-      this.store.dispatch(ActionTypes.GET_LIBRARY)
-    }
-  }
-
-  get mangaList(): Array<Item> {
-    const favorites = this.store.getters[GetterTypes.GET_FAVORITES]
-    return _.map(favorites, f => f.manga)
-  }
-}
 </script>
+
+<style scoped lang="sass">
+.manga-list
+  display: grid
+  row-gap: 10px
+  grid-template-columns: repeat( auto-fill, minmax(240px, 1fr) )
+  align-content: space-between
+  justify-content: space-between
+</style>

@@ -5,46 +5,39 @@
     input(
       v-model="query",
       placeholder="Search manga across sources",
-      v-on:keyup.enter="this.search"
+      v-on:keyup.enter="search"
     )
 
 .results
-  .result(v-for="result in this.results")
-    h2.header {{ result.sourceName }}
-    ItemListComponent(:mangas="result.mangaList")
+  .source-result(v-for="[name, mangaList] in result")
+    h2.header {{ name }}
+    span.refresh(@click="store.updateSource(mangaList[0].source.id)")
+      fa-icon(icon="fa-redo")
+    ItemListComponent(:mangas="mangaList")
+  .no-result(v-show="result.size == 0")
+    h2.header No Results
+    span.refresh(@click="store.updateAllSources()")
+      span Refresh all sources
+      fa-icon(icon="fa-redo")
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { useSourceStore } from "@/stores/source";
+import { computed, onUpdated, ref } from "vue";
 import ItemListComponent from "@/components/ItemListComponent.vue"
-import { ActionTypes } from "@/store/actions"
-import { GetterTypes } from "@/store/getters"
-import { SearchResult, State } from "@/store/types"
-import { Options, Vue } from "vue-class-component"
-import { Store, useStore } from "vuex"
 
-@Options({
-  components: {
-    ItemListComponent
-  }
+const store = useSourceStore()
+let query = ref("")
+let result = computed(() => {
+  return store.searchResult
 })
-export default class ItemListView extends Vue {
-  store!: Store<State>
-  query = ""
 
-  data() {
-    return {
-      store: useStore()
-    }
-  }
+onUpdated(() => {
+  document.title = query.value + " | Search"
+})
 
-  search() {
-    this.store.dispatch(ActionTypes.SEARCH_SOURCES, this.query)
-  }
-
-  get results(): Array<SearchResult> {
-    const mangas = this.store.getters[GetterTypes.GET_SEARCH_RESULT]
-    return mangas.slice(0, 100)
-  }
+const search = () => {
+  store.searchSources(query.value)
 }
 </script>
 
@@ -81,9 +74,49 @@ export default class ItemListView extends Vue {
       &::placeholder
         color: #555
 
-.result
+.source-result
+  display: grid
+  padding-right: 20px
+  grid-template-columns: 1fr
   h2.header
+    width: 100%
+    grid-row-start: 1
+    grid-column-start: 1
     background-color: #222
     padding: 10px
     margin: 10px auto
+  span.refresh
+    grid-row-start: 1
+    grid-column-start: 1
+    justify-self: end
+    padding-top: 15px
+    font-size: 30px
+    cursor: pointer
+
+.no-result
+  user-select: none
+  display: grid
+  padding-right: 20px
+  grid-template-columns: 1fr
+  h2.header
+    width: 100%
+    grid-row-start: 1
+    grid-column-start: 1
+    padding: 10px
+    margin: 10px auto
+  span.refresh
+    grid-row-start: 1
+    grid-column-start: 1
+    justify-self: end
+    display: grid
+    grid-auto-flow: column
+    gap: 5px
+    cursor: pointer
+    margin: 10px 0px
+    padding: 10px 0px
+    align-items: center
+
+    svg
+      font-size: 30px
+    
 </style>

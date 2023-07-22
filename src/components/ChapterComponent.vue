@@ -1,67 +1,48 @@
 <template lang="pug">
-.row(:oncontextmenu="this.options")
-  .info(@click="this.gotoReader()")
+.row(:oncontextmenu="options")
+  .info(@click="gotoReader()")
     .number {{ chapter.number }}
     .title {{ chapter.title }}
-    .uploadDate {{ this.since(chapter.uploadDate) }}
+    .uploadDate {{ since(chapter.uploadDate) }}
   ContextMenuComponent(ref="menu")
-    span.option(@click="this.updateProgress(true)") Mark as read
-    span.option(@click="this.updateProgress(false)") Mark as unread
+    span.option(@click="updateProgress(true)") Mark as read
+    span.option(@click="updateProgress(false)") Mark as unread
 </template>
 
-<script lang="ts">
-import ContextMenuComponent from "@/components/ContextMenuComponent.vue" // @ is an alias to /src
-import { Routes } from "@/router"
-import { ActionTypes } from "@/store/actions"
-import { Chapter, State } from "@/store/types"
-import { Options, Vue } from "vue-class-component"
-import { Store, useStore } from "vuex"
+<script setup lang="ts">
 import moment from "moment"
+import { ref } from "vue"
+import { Chapter, useMangaStore } from "@/stores/manga"
+import ContextMenuComponent from "@/components/ContextMenuComponent.vue" 
+import router, { Routes } from "@/router"
 
-@Options({
-  props: {
-    chapter: Chapter,
-    index: Number
-  },
-  components: {
-    ContextMenuComponent
-  }
-})
-export default class ChapterComponent extends Vue {
-  chapter!: Chapter
-  index!: number
-  store!: Store<State>
-  enableOptions = false
-  positionX = 0
+const props = defineProps<{
+  chapter: Chapter,
+  index: number
+}>()
 
-  $refs!: {
-    menu: ContextMenuComponent
-  }
+const store = useMangaStore()
+let enableOptions = false
+let positionX = 0
+let menu = ref(null)
 
-  data() {
-    return {
-      store: useStore()
-    }
-  }
+function updateProgress(read: boolean) {
+  // store.dispatch(ActionTypes.UPDATE_FAVORITE_PROGRESS, { read: read, index: index })
+  // menu.value.close()
+}
 
-  updateProgress(read: boolean) {
-    this.store.dispatch(ActionTypes.UPDATE_FAVORITE_PROGRESS, { read: read, index: this.index })
-    this.$refs.menu.close()
-  }
+function options(e: MouseEvent) {
+  e.preventDefault()
+  // menu.value.open(e)
+}
 
-  options(e: MouseEvent) {
-    e.preventDefault()
-    this.$refs.menu.open(e)
-  }
+function since(uploadDate: string): string {
+  return moment(uploadDate, "YYYY-MM-DD").fromNow()
+}
 
-  since(uploadDate: string): string {
-    return moment(uploadDate, "YYYY-MM-DD").fromNow()
-  }
-
-  gotoReader() {
-    this.store.dispatch(ActionTypes.GET_SOURCE_CHAPTER_INFO, this.index)
-    this.$router.push({ name: Routes.ReaderView, params: { id: this.index } })
-  }
+function gotoReader() {
+  store.setCurrentChapterByID(props.chapter.id)
+  router.push({ name: Routes.ReaderView, params: { id: props.chapter.id } })
 }
 </script>
 

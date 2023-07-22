@@ -1,59 +1,62 @@
 <template lang="pug">
-.source(@click="this.goto()", :style="{ 'background-image': this.imageUrl() }")
-  p {{ this.source.name }}
+.source(@click="goto()")
+  .icon
+    img(
+      @error="proxyImage",
+      :src="resolveImage(props.source.iconUrl)",
+      loading="lazy"
+    )
+  p {{ props.source.name }}
 </template>
 
-<script lang="ts">
-import { ActionTypes } from "@/store/actions"
-import { Source, State } from "@/store/types"
-import { Options, Vue } from "vue-class-component"
-import { Store, useStore } from "vuex"
+<script setup lang="ts">
+import { hostBaseURL, type Source } from '@/stores/source';
+import { resolveImage, proxyImage } from '@/utils';
 
-@Options({
-  props: {
-    source: Source
-  }
-})
-export default class SourceComponent extends Vue {
-  source!: Source
-  store!: Store<State>
-
-  data() {
-    return {
-      store: useStore()
-    }
-  }
-
-  imageUrl(): string {
-    if (this.source.iconUrl !== "") {
-      const url = "url(" + this.source.iconUrl + "), url(" + this.store.state.apiBaseUrl + "/_proxy/" + this.source.iconUrl?.replace(/^\/\//, "http://") + ")"
-      return url
-    }
-
-    return this.source.iconUrl
-  }
-
-  goto() {
-    this.store.dispatch(ActionTypes.GET_SOURCE_MANGA_LIST, { domain: this.source.domain, force: false })
-    this.$router.push({ path: "/source/mangas", query: { domain: this.source.domain } })
-  }
-}
+const props = defineProps<{
+  source: Source
+}>()
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="sass">
 .source
   width: 200px
   height: 200px
+  display: grid
+  grid-template-columns: 1fr
+  grid-template-rows: 1fr
+  background-size: cover
   cursor: pointer
-  background-size: 100%
-  background-repeat: no-repeat
-  background-position: center center
-  box-shadow: inset 0 -10px 05px 0 rgba(0,0,0,.1), inset 0 -20px 10px 0 rgba(0,0,0,.2), inset 0 -30px 15px 0 rgba(0,0,0,.3), inset 0 -40px 20px 0 rgba(0,0,0,.4), inset 0 -50px 25px 0 rgba(0,0,0,.5)
+  border-radius: 50%
+  &::before
+    content: ''
+    width: 100%
+    height: 100%
+    grid-row-start: 1
+    grid-column-start: 1
+    border-radius: 50%
+    z-index: 2
+    box-shadow: inset 0 -10px 05px 0 rgba(0,0,0,.1), inset 0 -20px 10px 0 rgba(0,0,0,.2), inset 0 -30px 15px 0 rgba(0,0,0,.3), inset 0 -40px 20px 0 rgba(0,0,0,.4), inset 0 -50px 25px 0 rgba(0,0,0,.5)
 
+  .icon
+    grid-column-start: 1
+    grid-row-start: 1
+    user-select: none
+    z-index: 1
+    overflow: hidden
+    object-fit: cover
+
+    img 
+      height: 100%
+      max-width: 100%
+      border-radius: 50%
+  
   p
+    grid-column-start: 1
+    grid-row-start: 1
     display: flex
-    height: 90%
+    z-index: 3
     align-items: flex-end
-    justify-content: space-evenly
+    justify-content: center
+    
 </style>

@@ -1,51 +1,54 @@
 <template lang="pug">
-#refresh(v-if="!this.store.state.pageLoading", @click="this.getUpdates()")
-  fa-icon.icon(icon="fa-redo")
-  span.title check for updates
-.updates-list
-  UpdateComponent(v-for="update in this.updateList", :dayUpdate="update")
+h1 Updates
+RefreshComponent(@click="getUpdates", :msg="'check for updates'")
+.day(v-for="day in store.getDailyUpdates()")
+  h3.header {{ formatDate(day.date) }}
+  .updates
+    UpdateComponent(v-for="entry in day.updates", :fav="entry.fav", :index="entry.i")
 </template>
 
-<script lang="ts">
-import UpdateComponent from "@/components/UpdateComponent.vue" // @ is an alias to /src
-import { ActionTypes } from "@/store/actions"
-import { GetterTypes } from "@/store/getters"
-import { DayUpdate, State } from "@/store/types"
-import { Options, Vue } from "vue-class-component"
-import { Store, useStore } from "vuex"
+<script setup lang="ts">
+import moment from "moment"
+import { useLibraryStore } from "@/stores/library"
+import RefreshComponent from "@/components/RefreshComponent.vue"
+import UpdateComponent from "@/components/UpdateComponent.vue"
+import { onUpdated } from "vue";
+import { useStateStore } from "@/stores/state";
 
-@Options({
-  components: {
-    UpdateComponent
-  }
+const store = useLibraryStore()
+const state = useStateStore()
+
+function getUpdates() {
+  store.updateLibrary()
+}
+
+onUpdated(()=>{
+  document.title = "Updates"
 })
-export default class MangaListView extends Vue {
-  store!: Store<State>
 
-  data() {
-    return {
-      store: useStore()
-    }
-  }
-
-  getUpdates() {
-    this.store.dispatch(ActionTypes.UPDATE_LIBRARY)
-  }
-
-  get updateList(): Array<DayUpdate> {
-    const updates = this.store.getters[GetterTypes.GET_UPDATES]
-    if (updates.length <= 0) {
-      this.store.dispatch(ActionTypes.GET_LIBRARY)
-    }
-
-    return updates
-  }
+function formatDate(date: string): string {
+  return moment(date, "YYYY-MM-DD").calendar(null, {
+    lastDay: "[Yesterday]",
+    sameDay: "[Today]",
+    nextDay: "[Tomorrow]",
+    lastWeek: "dddd MMMM DD, YYYY",
+    nextWeek: "dddd MMMM DD, YYYY",
+    sameElse: "dddd MMMM DD, YYYY"
+  })
 }
 </script>
 
 <style lang="sass" scoped>
-.manga-list
+h3.header
+  background-color: #222
+  padding: 10px
+  margin: 10px auto
+.updates
   display: grid
-  grid-template-columns: repeat( auto-fit, minmax(200px, 1fr) )
-  gap: 10px
+  padding: 10px
+  max-width: 100%
+  grid-template-columns: repeat(auto-fill, 300px)
+  justify-content: space-between
+  align-content: space-around
+  row-gap: 20px
 </style>

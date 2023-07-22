@@ -1,70 +1,53 @@
 <template lang="pug">
 .context-menu(
-  v-show="show",
-  :style="style",
+  v-show="showVal",
+  :style="{'top': top+'px', 'left': left+'px'}",
   ref="contextMenu",
   tabindex="0",
-  @blur="close",
-  @onmouseleave="close",
-  @onmouseout="close"
+  @mouseleave="close"
+  @blur="close"
+  @mouseout="close"
 )
   slot
 </template>
 
-<script lang="ts">
-import { State } from "@/store/types"
-import { Vue } from "vue-class-component"
-import { Store, useStore } from "vuex"
+<script setup lang="ts">
+import { useSourceStore } from '@/stores/source';
+import { nextTick, ref } from 'vue';
 
-export default class ContextMenuComponent extends Vue {
-  store!: Store<State>
-  left = 0
-  top = 0
-  showVal = false
-  $refs!: {
-    contextMenu: HTMLDivElement
-  }
+const store = useSourceStore()
+let left = ref(0)
+let top = ref(0)
+let showVal = ref(false)
+let contextMenu = ref(null)
 
-  data() {
-    return {
-      store: useStore()
-    }
-  }
-
-  get style() {
-    return {
-      top: this.top + "px",
-      left: this.left + "px"
-    }
-  }
-
-  get show(): boolean {
-    return this.showVal
-  }
-
-  set show(v: boolean) {
-    this.showVal = v
-  }
-
-  close() {
-    this.showVal = false
-    this.left = 0
-    this.top = 0
-  }
-
-  open(evt: MouseEvent) {
-    this.left = evt.pageX || evt.clientX
-    this.top = evt.pageY || evt.clientY
-
-    this.showVal = true
-    this.$nextTick(() => {
-      this.$refs.contextMenu.focus()
-    })
+const style = () => {
+  return {
+    top: top.value + "px",
+    left: left.value + "px"
   }
 }
+
+const close = () => {
+  showVal.value = false
+  left.value = 0
+  top.value = 0
+}
+
+const open = (evt: MouseEvent) => {
+  left.value = (evt.pageX || evt.clientX) - 5
+  top.value = (evt.pageY || evt.clientY) - 5
+
+  showVal.value = true
+  nextTick(() => {
+    contextMenu.value.focus()
+  })
+}
+
+defineExpose({open, close})
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
 .context-menu
   position: fixed
   background: #292929
@@ -74,4 +57,12 @@ export default class ContextMenuComponent extends Vue {
   cursor: pointer
   display: grid
   grid-auto-flow: row
+  justify-items: stretch
+  text-align: left
+
+  .option
+    padding: 5px
+    &:hover
+      background-color: #555
+      font-weight: bold
 </style>

@@ -1,47 +1,29 @@
 <template lang="pug">
-#refresh(v-if="!this.store.state.pageLoading", @click="this.getSources()")
-  fa-icon.icon(icon="fa-redo")
-  span.title refresh
+//- #refresh(v-if="!this.store.state.pageLoading", @click="this.getSources()")
+//-   fa-icon.icon(icon="fa-redo")
+//-   span.title refresh
 .source-list
-  SourceComponent(v-for="source in this.sources", :source="source")
+  SourceComponent(v-for="source in sources", :source="source")
 </template>
 
-<script lang="ts">
-import SourceComponent from "@/components/SourceComponent.vue" // @ is an alias to /src
-import { ActionTypes } from "@/store/actions"
-import { GetterTypes } from "@/store/getters"
-import { State } from "@/store/types"
-import { Options, Vue } from "vue-class-component"
-import { Store, useStore } from "vuex"
+<script setup lang="ts">
+import SourceComponent from "@/components/SourceComponent.vue"
+import { useSourceStore } from "@/stores/source";
+import { computed, onMounted, onUpdated } from "vue";
 
-@Options({
-  components: {
-    SourceComponent
+const store = useSourceStore()
+const sources = computed(() => {
+  if (store.sources.length === 0)  {
+    store.getSources()
   }
+
+  return store.sources
 })
-export default class SourceListView extends Vue {
-  store!: Store<State>
 
-  data() {
-    return {
-      store: useStore()
-    }
-  }
+onUpdated(()=>{
+  document.title = "Sources"
+})
 
-  getSources() {
-    this.store.dispatch(ActionTypes.GET_SOURCE_LIST)
-  }
-
-  mounted() {
-    if (this.store.getters[GetterTypes.GET_SOURCE_MANGA_LIST].length <= 0) {
-      this.getSources()
-    }
-  }
-
-  get sources() {
-    return this.store.getters[GetterTypes.GET_SOURCE_LIST]
-  }
-}
 </script>
 
 <style lang="sass" scoped>
