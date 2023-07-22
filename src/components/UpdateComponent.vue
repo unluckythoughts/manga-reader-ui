@@ -1,5 +1,9 @@
 <template lang="pug">
-.update(:class="{ 'completed': isRead() }", @click="gotoManga")
+.update(
+  :class="{ 'completed': isRead() }",
+  @click="gotoManga",
+  :oncontextmenu="options"
+)
   img(
     :src="props.fav.manga.imageUrl",
     @error="proxyImage",
@@ -7,13 +11,18 @@
   )
   p.title(ref="manga") {{ props.fav.manga.title }}
   p.chapter {{ props.fav.manga.chapters[props.index].title }}
+ContextMenuComponent(ref="menu")
+  span.option(@click="updateProgress(true)") Mark as read
+  span.option(@click="updateProgress(false)") Mark as unread
 </template>
 
 <script setup lang="ts">
 import router, { Routes } from "@/router"
 import type { Favorite } from "@/stores/library"
 import { useMangaStore, type Item } from "@/stores/manga"
-import { ref } from "vue";
+import { useLibraryStore } from "@/stores/library"
+import { ref } from "vue"
+import ContextMenuComponent from "./ContextMenuComponent.vue"
 
 const props = defineProps<{
   fav: Favorite,
@@ -21,12 +30,25 @@ const props = defineProps<{
 }>()
 
 const store = useMangaStore()
+const libraryStore = useLibraryStore()
+const menu = ref(null)
 const manga = ref(null)
 
 function isRead(): boolean {
   const chapter = props.fav.manga.chapters[props.index]
   return (props.fav.progress[0] > parseFloat(chapter.number)) ||
     (props.fav.progress[0] == parseFloat(chapter.number) && props.fav.progress[1] == -1)
+}
+
+function updateProgress(read: boolean) {
+  const chapter = props.fav.manga.chapters[props.index]
+  libraryStore.updateFavouriteProgress(chapter.number, -1, read, props.fav.manga.id)
+  menu.value.close()
+}
+
+function options(e: MouseEvent) {
+  e.preventDefault()
+  menu.value.open(e)
 }
 
 function gotoManga(e: MouseEvent) {

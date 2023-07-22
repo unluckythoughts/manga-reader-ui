@@ -107,12 +107,13 @@ export const useLibraryStore = defineStore('library', () => {
     }
   }
 
-  async function updateFavouriteProgress(chapterNum: string, pageId: number, read: boolean) {
-    let favIndex = library.findIndex(v => v?.manga.id === mangaStore.currentItem.id)
+  async function updateFavouriteProgress(chapterNum: string, pageId: number, read: boolean, mangaId?: number) {
+    let favIndex = library.findIndex(v => v?.manga.id === (mangaId || mangaStore.currentItem.id))
     if (favIndex < 0) {
       console.error("could not find the favourite id to update progress")
       return
     }
+
     let fav = library[favIndex]
     if (read) {
       if (fav.progress[0] > parseFloat(chapterNum)) {
@@ -123,7 +124,16 @@ export const useLibraryStore = defineStore('library', () => {
       ) {
         return
       }
+    } else {
+      let chapterIndex = fav.manga.chapters.findIndex(v => v.number == chapterNum)
+      if (chapterIndex < fav.manga.chapters.length - 1) {
+        chapterNum = fav.manga.chapters[chapterIndex + 1].number
+        pageId = -1
+      }
     }
+
+
+    console.log("progess", fav.id, mangaId, chapterNum, pageId)
 
     try {
       state.setLoading(true)
