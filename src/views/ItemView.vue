@@ -62,7 +62,7 @@ onBeforeMount(() => {
 
 function isRead(chapterNum: number): boolean {
   let progress = libraryStore.getFavouriteProgress(manga.value.id)
-  return progress[0] > chapterNum || (progress[0] === chapterNum && progress[1] === -1)
+  return progress[0] > chapterNum || (progress[0] == chapterNum && progress[1] == -1)
 }
 
 function getUpdates() {

@@ -14,15 +14,16 @@ import { useMangaStore } from "@/stores/manga";
 import { computed, onBeforeMount, onMounted, onUnmounted, onUpdated, reactive, ref, type Ref } from "vue";
 import { useRoute } from "vue-router";
 import { proxyImage } from "@/utils"
+import { useLibraryStore } from "@/stores/library";
 
 const route = useRoute()
 const store = useMangaStore()
+const libraryStore = useLibraryStore()
 
 var scrollTarget: HTMLElement
 let pages = new Array<Element>()
 let imageLoads = ref(new Array<Boolean>())
 let readUntil = 0
-let imagesVisible = new Array<Ref<Boolean>>()
 
 let imageUrls = computed(() => {
   return store.currentChapter.imageUrls.slice(0, imageLoads.value.length + 1)
@@ -40,11 +41,14 @@ function imageInViewport(e: Element): Boolean {
 
 function loadImage(i: number) {
   imageLoads.value[i] = true
-  if (i == store.currentChapter.imageUrls.length - 1) {
-    pages = new Array<Element>()
-    scrollTarget.querySelectorAll(".pages .page").forEach(el => {
-      pages.push(el)
-    })
+
+  if (store.currentItem.isFavourite) {
+    if (i == store.currentChapter.imageUrls.length - 1) {
+      pages = new Array<Element>()
+      scrollTarget.querySelectorAll(".pages .page").forEach(el => {
+        pages.push(el)
+      })
+    }
   }
 }
 
@@ -63,7 +67,6 @@ onMounted(() => {
 onUpdated(() => {
   document.title = store.currentChapter.title + " | Chapter"
   readUntil = 0
-
 })
 
 onUnmounted(() => {
@@ -71,14 +74,19 @@ onUnmounted(() => {
 })
 
 function scrolled(e: Event) {
-  pages.forEach((el, i) => {
-    if (imageInViewport(el)) {
-      if (i > readUntil) {
-        readUntil = i
-        console.log("updating progress - ", store.currentChapter.number, i)
+  if (store.currentItem.isFavourite) {
+    pages.forEach((el, i) => {
+      if (imageInViewport(el)) {
+        if (i > readUntil) {
+          readUntil = i
+          if (readUntil == store.currentChapter.imageUrls.length - 1) {
+            readUntil = -1
+          }
+          libraryStore.updateFavouriteProgress(store.currentChapter.number, readUntil, true)
+        }
       }
-    }
-  })
+    })
+  }
 }
 </script>
   
