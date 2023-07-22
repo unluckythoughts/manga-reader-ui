@@ -32,7 +32,7 @@ import { useRoute } from "vue-router"
 const store = useMangaStore()
 const route = useRoute()
 const libraryStore = useLibraryStore()
-const menu = ref(null)
+let menu = ref<InstanceType<typeof ContextMenuComponent> | null>(null)
 
 let props = defineProps<{
   manga: Item
@@ -46,7 +46,7 @@ function toggleFavourite(e: MouseEvent) {
   } else {
     libraryStore.addToLibrary(props.manga.id)
   }
-  menu.value.close()
+  menu.value?.close()
 }
 
 const isFavorite = computed((): boolean => {
@@ -59,7 +59,7 @@ const isFavorite = computed((): boolean => {
 function options(e: MouseEvent) {
   e.preventDefault()
   e.stopPropagation()
-  menu.value.open(e)
+  menu.value?.open(e)
 }
 
 async function goto() {

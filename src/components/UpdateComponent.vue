@@ -31,8 +31,8 @@ const props = defineProps<{
 
 const store = useMangaStore()
 const libraryStore = useLibraryStore()
-const menu = ref(null)
-const manga = ref(null)
+const menu = ref<InstanceType<typeof ContextMenuComponent> | null>(null)
+const manga = ref<HTMLParagraphElement | null>(null)
 
 function isRead(): boolean {
   const chapter = props.fav.manga.chapters[props.index]
@@ -43,12 +43,12 @@ function isRead(): boolean {
 function updateProgress(read: boolean) {
   const chapter = props.fav.manga.chapters[props.index]
   libraryStore.updateFavouriteProgress(chapter.number, -1, read, props.fav.manga.id)
-  menu.value.close()
+  menu.value?.close()
 }
 
 function options(e: MouseEvent) {
   e.preventDefault()
-  menu.value.open(e)
+  menu.value?.open(e)
 }
 
 function gotoManga(e: MouseEvent) {

@@ -16,7 +16,7 @@ import { nextTick, ref } from 'vue';
 let left = ref(0)
 let top = ref(0)
 let showVal = ref(false)
-let contextMenu = ref(null)
+let contextMenu = ref<HTMLDivElement | null>(null)
 
 const style = () => {
   return {
@@ -37,7 +37,7 @@ const open = (evt: MouseEvent) => {
 
   showVal.value = true
   nextTick(() => {
-    contextMenu.value.focus()
+    contextMenu.value?.focus()
   })
 }
 

@@ -24,16 +24,16 @@ const props = defineProps<{
 
 const store = useMangaStore()
 const libraryStore = useLibraryStore()
-let menu = ref(null)
+let menu = ref<InstanceType<typeof ContextMenuComponent> | null>(null)
 
 function updateProgress(read: boolean) {
   libraryStore.updateFavouriteProgress(props.chapter.number, -1, read)
-  menu.value.close()
+  menu.value?.close()
 }
 
 function options(e: MouseEvent) {
   e.preventDefault()
-  menu.value.open(e)
+  menu.value?.open(e)
 }
 
 function since(uploadDate: string): string {
