@@ -132,9 +132,6 @@ export const useLibraryStore = defineStore('library', () => {
       }
     }
 
-
-    console.log("progess", fav.id, mangaId, chapterNum, pageId)
-
     try {
       state.setLoading(true)
       const url = apiBaseURL + "/manga/library/" + fav?.id + "/chapter/" + chapterNum + "/progress/" + pageId
