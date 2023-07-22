@@ -1,5 +1,5 @@
 <template lang="pug">
-.update(:class="{ completed: isRead }")
+.update(:class="{ 'completed': isRead() }")
   img(
     :src="props.fav.manga.imageUrl",
     @error="proxyImage",
@@ -22,11 +22,10 @@ const props = defineProps<{
 
 const store = useMangaStore()
 
-function isRead(c: { index: number, favorite: Favorite }): boolean {
-  // const chapter = c.favorite.manga.chapters[c.index]
-  // return (c.favorite.progress[0] > parseFloat(chapter.number)) ||
-  // (c.favorite.progress[0] === parseFloat(chapter.number) && c.favorite.progress[1] === -1)
-  return false
+function isRead(): boolean {
+  const chapter = props.fav.manga.chapters[props.index]
+  return (props.fav.progress[0] > parseFloat(chapter.number)) ||
+    (props.fav.progress[0] == parseFloat(chapter.number) && props.fav.progress[1] == -1)
 }
 
 function gotoReader() {

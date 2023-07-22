@@ -12,7 +12,7 @@ import moment from "moment"
 import { useLibraryStore } from "@/stores/library"
 import RefreshComponent from "@/components/RefreshComponent.vue"
 import UpdateComponent from "@/components/UpdateComponent.vue"
-import { onUpdated } from "vue";
+import { onMounted } from "vue";
 import { useStateStore } from "@/stores/state";
 
 const store = useLibraryStore()
@@ -22,7 +22,11 @@ function getUpdates() {
   store.updateLibrary()
 }
 
-onUpdated(() => {
+onMounted(() => {
+  document.title = "Library"
+  if (store.library.length === 0) {
+    store.getLibrary()
+  }
   document.title = "Updates"
 })
 
