@@ -1,7 +1,7 @@
 <template lang="pug">
 h1 Updates
 RefreshComponent(@click="getUpdates", :msg="'check for updates'")
-.day(v-for="day in store.getDailyUpdates()")
+.day(v-for="day in store.dailyUpdates")
   h3.header {{ formatDate(day.date) }}
   .updates
     UpdateComponent(v-for="entry in day.updates", :fav="entry.fav", :index="entry.i")

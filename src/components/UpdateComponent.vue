@@ -1,19 +1,19 @@
 <template lang="pug">
-.update(:class="{ 'completed': isRead() }")
+.update(:class="{ 'completed': isRead() }", @click="gotoManga")
   img(
     :src="props.fav.manga.imageUrl",
     @error="proxyImage",
     loading="lazy",
-    @click="gotoReader"
   )
-  p.title(@click="gotoManga") {{ props.fav.manga.title }}
-  p.chapter(@click="gotoReader") {{ props.fav.manga.chapters[props.index].title }}
+  p.title(ref="manga") {{ props.fav.manga.title }}
+  p.chapter {{ props.fav.manga.chapters[props.index].title }}
 </template>
 
 <script setup lang="ts">
 import router, { Routes } from "@/router"
 import type { Favorite } from "@/stores/library"
 import { useMangaStore, type Item } from "@/stores/manga"
+import { ref } from "vue";
 
 const props = defineProps<{
   fav: Favorite,
@@ -21,6 +21,7 @@ const props = defineProps<{
 }>()
 
 const store = useMangaStore()
+const manga = ref(null)
 
 function isRead(): boolean {
   const chapter = props.fav.manga.chapters[props.index]
@@ -28,20 +29,17 @@ function isRead(): boolean {
     (props.fav.progress[0] == parseFloat(chapter.number) && props.fav.progress[1] == -1)
 }
 
-function gotoReader() {
+function gotoManga(e: MouseEvent) {
   let mangaID = props.fav.manga.id
   let chapter = props.fav.manga.chapters[props.index]
   store.setCurrentItemByID(mangaID)
-  store.setCurrentChapterByID(chapter.id)
-  router.push({ name: Routes.ReaderView, params: { id: chapter.id } })
+  if (e.target == manga.value) {
+    router.push({ name: Routes.ItemView, params: { id: mangaID } })
+  } else {
+    store.setCurrentChapterByID(chapter.id)
+    router.push({ name: Routes.ReaderView, params: { id: chapter.id } })
+  }
 }
-
-function gotoManga() {
-  let mangaID = props.fav.manga.id
-  store.setCurrentItemByID(mangaID)
-  router.push({ name: Routes.ItemView, params: { id: mangaID } })
-}
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

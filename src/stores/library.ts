@@ -1,9 +1,9 @@
-import { defineStore } from 'pinia'
-import { onUpdated, reactive, ref } from 'vue'
-import { Chapter, Item, useMangaStore } from './manga'
-import { apiBaseURL } from './source'
 import axios from 'axios'
 import moment from 'moment'
+import { defineStore } from 'pinia'
+import { reactive } from 'vue'
+import { Item, useMangaStore } from './manga'
+import { apiBaseURL } from './source'
 import { useStateStore } from './state'
 
 export class Favorite {
@@ -25,13 +25,20 @@ export class Favorite {
   }
 }
 
+type dayUpdate = {
+  date: string,
+  updates: Array<{ fav: Favorite, i: number }>
+}
+
 export const useLibraryStore = defineStore('library', () => {
   let library = reactive(new Array<Favorite>())
+  let dailyUpdates = reactive(new Array<dayUpdate>())
   const mangaStore = useMangaStore()
   const state = useStateStore()
 
   function setLibrary(favs: Array<Favorite>) {
     Object.assign(library, favs)
+    getDailyUpdates()
   }
 
   async function getLibrary() {
@@ -143,10 +150,15 @@ export const useLibraryStore = defineStore('library', () => {
     return library[favIndex].progress
   }
 
-  function getDailyUpdates(): Array<{ date: string, updates: Array<{ fav: Favorite, i: number }> }> {
+  async function getDailyUpdates() {
     let updateMap = new Map<string, Array<{ fav: Favorite, i: number }>>()
     let dates = new Array<string>()
 
+    if (library.length == 0) {
+      await getLibrary()
+    }
+
+    state.setLoading(true)
     for (let i = 0; i < library.length; i++) {
       const fav = library[i]
       for (let j = 0; j < fav.manga.chapters.length; j++) {
@@ -165,17 +177,17 @@ export const useLibraryStore = defineStore('library', () => {
     }
 
     dates.sort().reverse()
-    let updates = new Array<{ date: string, updates: Array<{ fav: Favorite, i: number }> }>
+    dailyUpdates.splice(0, dailyUpdates.length)
     for (const i in dates) {
-      updates.push({ date: dates[i], updates: updateMap.get(dates[i]) || new Array() })
+      dailyUpdates.push({ date: dates[i], updates: updateMap.get(dates[i]) || new Array() })
     }
 
-    return updates
+    state.setLoading(false)
   }
 
   return {
     library, getLibrary, addToLibrary, deletefromLibrary, updateLibrary,
     isFavourite, getFavouriteProgress, updateFavouriteProgress,
-    getDailyUpdates
+    dailyUpdates
   }
 })
