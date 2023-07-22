@@ -62,8 +62,8 @@ function options(e: MouseEvent) {
   menu.value.open(e)
 }
 
-function goto() {
-  store.setCurrentItemByID(props.manga.id)
+async function goto() {
+  await store.setCurrentItemByID(props.manga.id)
   router.push({ name: Routes.ItemView, params: { id: props.manga.id } })
 }
 </script>

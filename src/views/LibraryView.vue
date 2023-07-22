@@ -10,12 +10,15 @@ main
 import { useLibraryStore } from '@/stores/library';
 import RefreshComponent from '@/components/RefreshComponent.vue'
 import ItemComponent from '@/components/ItemComponent.vue'
-import { onUpdated } from 'vue';
+import { onMounted } from 'vue';
 
 const store = useLibraryStore()
 
-onUpdated(() => {
+onMounted(() => {
   document.title = "Library"
+  if (store.library.length === 0) {
+    store.getLibrary()
+  }
 })
 </script>
 

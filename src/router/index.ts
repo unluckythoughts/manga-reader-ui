@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, type RouteLocationNormalized } from "vue-router"
 import LibraryView from "../views/LibraryView.vue"
 import { nextTick } from "vue"
+import { useStateStore } from "@/stores/state"
 
 export enum Routes {
   LibraryView = "LibraryView",
@@ -57,6 +58,13 @@ const router = createRouter({
 
     return { top: 0 }
   }
+})
+
+
+router.afterEach((to: RouteLocationNormalized) => {
+  let state = useStateStore()
+  state.setLoading(false)
+  state.clearError()
 })
 
 export default router

@@ -3,21 +3,20 @@
 //-   fa-icon.icon(icon="fa-redo")
 //-   span.title refresh
 .source-list
-  SourceComponent(v-for="source in sources", :source="source")
+  SourceComponent(v-for="source in store.sources", :source="source")
 </template>
 
 <script setup lang="ts">
 import SourceComponent from "@/components/SourceComponent.vue"
 import { useSourceStore } from "@/stores/source";
-import { computed, onMounted, onUpdated } from "vue";
+import { onBeforeMount, onUpdated } from "vue";
 
 const store = useSourceStore()
-const sources = computed(() => {
+
+onBeforeMount(() => {
   if (store.sources.length === 0) {
     store.getSources()
   }
-
-  return store.sources
 })
 
 onUpdated(() => {

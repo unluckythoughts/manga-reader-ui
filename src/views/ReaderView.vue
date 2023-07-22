@@ -1,124 +1,102 @@
 <template lang="pug">
 .pages
-  .page(v-for="(url, i) in imageUrls")
+  .page(v-for="(url, i) in imageUrls", :id="'page-'+i")
     img(
       :src="url",
       @error="proxyImage",
-      @load="loadImage(i)"
-      :class="{'done': dones[i]}"
+      @load="loadImage(i)",
+      :class="{'done': imageLoads[i]}"
     )
 </template>
-
+  
 <script setup lang="ts">
-import router, { Routes } from "@/router"
-import { Chapter, useMangaStore } from "@/stores/manga";
-import { computed, onBeforeMount, onBeforeUnmount, onMounted, onUpdated, ref } from "vue";
+import { useMangaStore } from "@/stores/manga";
+import { computed, onBeforeMount, onMounted, onUnmounted, onUpdated, reactive, ref, type Ref } from "vue";
 import { useRoute } from "vue-router";
-import { isArrayEmpty, proxyImage } from "@/utils"
+import { proxyImage } from "@/utils"
 
 const route = useRoute()
 const store = useMangaStore()
 
-let loadedImages = ref(1)
-let dones : boolean[] = []
+var scrollTarget: HTMLElement
+let pages = new Array<Element>()
+let imageLoads = ref(new Array<Boolean>())
+let readUntil = 0
+let imagesVisible = new Array<Ref<Boolean>>()
+
 let imageUrls = computed(() => {
-  return store.currentChapter.imageUrls.slice(0, loadedImages.value)
+  return store.currentChapter.imageUrls.slice(0, imageLoads.value.length + 1)
 })
+
+function imageInViewport(e: Element): Boolean {
+  const rect = e.getBoundingClientRect()
+  let inViewPort = (
+    rect.top <= 0 && rect.bottom > 0
+  )
+
+  return inViewPort
+}
+
+
 function loadImage(i: number) {
-  loadedImages.value = loadedImages.value + 1
-  dones[i] = true
+  imageLoads.value[i] = true
+  if (i == store.currentChapter.imageUrls.length - 1) {
+    pages = new Array<Element>()
+    scrollTarget.querySelectorAll(".pages .page").forEach(el => {
+      pages.push(el)
+    })
+  }
 }
 
 onBeforeMount(() => {
   let id = Number(route.params.id || "0")
   if (id !== 0) {
-    if (store.currentChapter.id !== id) {
-      let chapter = store.currentItem.chapters.find(val => val.id === id) || new Chapter()
-      if (isArrayEmpty(chapter.imageUrls)) {
-        store.updateCurrentChapter(id)
-      }
-    } else if (isArrayEmpty(store.currentChapter.imageUrls)) {
-      store.updateCurrentChapter(id)
-    }
+    store.setCurrentChapterByID(id)
   }
+})
+
+onMounted(() => {
+  scrollTarget = document.getElementById('content') || new HTMLElement()
+  scrollTarget.addEventListener('scroll', scrolled, { passive: true })
 })
 
 onUpdated(() => {
   document.title = store.currentChapter.title + " | Chapter"
+  readUntil = 0
+
 })
 
+onUnmounted(() => {
+  scrollTarget.removeEventListener('scroll', scrolled)
+})
 
-// onMounted(() => {
-//   scrollTarget = document.getElementById("content") || new HTMLElement()
-
-//   currentPage = 0
-//   const hash = route.hash
-//   if (hash !== "") {
-//     setTimeout(() => {
-//       const img = document.getElementById(hash.replace("#", ""))
-//       scrollTarget.scrollTop = img?.getBoundingClientRect().top || 0
-//     }, 500)
-//   }
-// })
-
-// function scrolled(e: Event) {
-//   e.stopImmediatePropagation()
-//   const scroll = scrollTarget.scrollTop
-//   if (lastScroll < scroll) {
-//     scrollingUp = false
-//     updateProgress()
-//   } else {
-//     scrollingUp = true
-//   }
-//   if (scroll === 0) {
-//     scrollingUp = false
-//   }
-//   lastScroll = scroll
-// }
-
-// async function updateProgress() {
-//   const pages = scrollTarget.querySelectorAll(".page img")
-
-//   for (const i in pages) {
-//     const chapterNumber = parseFloat(chapter.number)
-//     // const progress = favorite.progress || [0, 0]
-//     // if (chapterNumber > progress[0] || (chapterNumber === progress[0] && progress[1] >= 0 && parseInt(i) > progress[1] && parseInt(i) > currentPage)) {
-//     //   const rect = pages[i].getBoundingClientRect()
-//     //   if (rect.top < scrollTarget.clientHeight) {
-//     //     if (rect.height + rect.top > 0) {
-//     //       currentPage = parseInt(i)
-//     //       let pageId = currentPage
-//     //       if (currentPage >= pages.length - 1) {
-//     //         pageId = -1
-//     //       }
-//     //       store.dispatch(ActionTypes.UPDATE_FAVORITE_PROGRESS, {
-//     //         read: false,
-//     //         favoriteId: favorite.id,
-//     //         index: index,
-//     //         pageId: pageId
-//     //       })
-//     //       break
-//     //     }
-//     //   }
-//     // }
-//   }
-// }
+function scrolled(e: Event) {
+  pages.forEach((el, i) => {
+    if (imageInViewport(el)) {
+      if (i > readUntil) {
+        readUntil = i
+        console.log("updating progress - ", store.currentChapter.number, i)
+      }
+    }
+  })
+}
 </script>
-
-<style lang="sass" scoped>
-.pages
-  display: grid
-  grid-auto-flow: row
-  gap: 0px
-
-  .page
-    width: 100%
   
-    img
-      display: block
-      user-select: none
+<style lang="sass" scoped>
+  .pages
+    display: grid
+    grid-auto-flow: row
+    gap: 0px
+  
+    .page
       width: 100%
-      min-height: 2500px
-      &.done
-        min-height: 0px  
-</style>
+    
+      img
+        display: block
+        user-select: none
+        width: 100%
+        min-height: 2500px
+        &.done
+          min-height: 0px  
+  </style>
+  

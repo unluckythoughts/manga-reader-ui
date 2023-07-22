@@ -3,7 +3,7 @@
   span.message
     b {{ error.name }}:&nbsp;
     span {{ error.message }}
-  span.close
+  span.close(@click="state.clearError")
     fa-icon(icon="fa-close")
 </template>
 

@@ -23,13 +23,14 @@ export const apiBaseURL = hostBaseURL + "/api"
 export const proxyBaseURL = hostBaseURL + "/_proxy/"
 
 export const useSourceStore = defineStore('source', () => {
-  const sources = new Array<Source>()
+  const sources = reactive(new Array<Source>())
   const searchResult = reactive(new Map<string, Array<Item>>())
   const state = useStateStore()
 
   const getSources = async () => {
     const sourceURL = apiBaseURL + "/manga/source"
     try {
+      sources.splice(0, sources.length)
       state.setLoading(true)
       const resp = await axios.get(sourceURL)
       for (const i in resp.data.data) {

@@ -41,7 +41,9 @@ export const useLibraryStore = defineStore('library', () => {
       const resp = await axios.get(url)
       let favs = new Array<Favorite>()
       for (const i in resp.data.data) {
-        favs.push(new Favorite(resp.data.data[i]))
+        let fav = new Favorite(resp.data.data[i])
+        fav.manga.isFavourite = true
+        favs.push(fav)
       }
       setLibrary(favs)
     } catch (e) {
@@ -170,8 +172,6 @@ export const useLibraryStore = defineStore('library', () => {
 
     return updates
   }
-
-  getLibrary()
 
   return {
     library, getLibrary, addToLibrary, deletefromLibrary, updateLibrary,
