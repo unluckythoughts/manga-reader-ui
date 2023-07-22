@@ -6,16 +6,13 @@
   tabindex="0",
   @mouseleave="close"
   @blur="close"
-  @mouseout="close"
 )
   slot
 </template>
 
 <script setup lang="ts">
-import { useSourceStore } from '@/stores/source';
 import { nextTick, ref } from 'vue';
 
-const store = useSourceStore()
 let left = ref(0)
 let top = ref(0)
 let showVal = ref(false)
@@ -60,9 +57,11 @@ defineExpose({ open, close })
   justify-items: stretch
   text-align: left
 
-  .option
-    padding: 5px
+  span.option
+    font-size: 16px
+    padding: 10px
+    text-align: left
+    color: #ffffff
     &:hover
-      background-color: #555
-      font-weight: bold
+      background-color: #444
 </style>

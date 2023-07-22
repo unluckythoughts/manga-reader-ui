@@ -15,6 +15,7 @@ import { ref } from "vue"
 import { Chapter, useMangaStore } from "@/stores/manga"
 import ContextMenuComponent from "@/components/ContextMenuComponent.vue"
 import router, { Routes } from "@/router"
+import { useLibraryStore } from "@/stores/library"
 
 const props = defineProps<{
   chapter: Chapter,
@@ -22,18 +23,17 @@ const props = defineProps<{
 }>()
 
 const store = useMangaStore()
-let enableOptions = false
-let positionX = 0
+const libraryStore = useLibraryStore()
 let menu = ref(null)
 
 function updateProgress(read: boolean) {
-  // store.dispatch(ActionTypes.UPDATE_FAVORITE_PROGRESS, { read: read, index: index })
-  // menu.value.close()
+  libraryStore.updateFavouriteProgress(props.chapter.number, -1, read)
+  menu.value.close()
 }
 
 function options(e: MouseEvent) {
   e.preventDefault()
-  // menu.value.open(e)
+  menu.value.open(e)
 }
 
 function since(uploadDate: string): string {
@@ -64,11 +64,4 @@ function gotoReader() {
   .uploadDate
     text-align: right
 
-span.option
-  font-size: 16px
-  padding: 10px
-  text-align: left
-  color: #ffffff
-  &:hover
-    background-color: #444
 </style>
