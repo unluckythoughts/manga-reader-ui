@@ -7,6 +7,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy'
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   let config: UserConfig = {
+    base: "/static/",
     define: {
       __APP_ENV__: env.APP_ENV
     },
